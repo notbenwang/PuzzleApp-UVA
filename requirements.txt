@@ -1,0 +1,6 @@
+asgiref
+Django
+gunicorn
+sqplparse
+django-heroku
+dj-database-url
