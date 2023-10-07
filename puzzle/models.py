@@ -1,3 +1,5 @@
 from django.db import models
 
-# Create your models here.
+class CustomUser(models.Model):
+    social_id = models.IntegerField("oauth_id", default=-1)
+    is_admin = models.BooleanField("is_admin")

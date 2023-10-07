@@ -5,6 +5,8 @@
 {% if user.is_authenticated %}
   <p>Welcome, You are logged in as {{ user.username }}</p>
   <p>Your account name is {{ user.email }}</p>
+<p>{{ user.id }}</p>
+  <a href="{% url 'dashboard' %}">Go to dashboard</a>
   <a href="{% url 'account_logout' %}">Sign out</a>
 
 {% else %}
