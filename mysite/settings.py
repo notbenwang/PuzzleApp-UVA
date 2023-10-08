@@ -31,10 +31,11 @@ if not IS_HEROKU_APP:
     DEBUG = True
 # SECURITY WARNING: don't run with debug turned on in production!
 
-if IS_HEROKU_APP:
-    ALLOWED_HOSTS = ['local host', 'https://b21-app-9b430d776820.herokuapp.com']
-else:
-    ALLOWED_HOSTS = ['local host', 'https://b21-app-9b430d776820.herokuapp.com', '127.0.0.1']
+ALLOWED_HOSTS = ['local host', 'https://b21-app-9b430d776820.herokuapp.com', '127.0.0.1']
+# if IS_HEROKU_APP:
+#     ALLOWED_HOSTS = ['local host', 'https://b21-app-9b430d776820.herokuapp.com']
+# else:
+#     ALLOWED_HOSTS = ['local host', 'https://b21-app-9b430d776820.herokuapp.com', '127.0.0.1']
 
 
 # Application definition
