@@ -33,7 +33,7 @@ if not IS_HEROKU_APP:
 
 
 if IS_HEROKU_APP:
-    ALLOWED_HOSTS = ['localhost', 'https://b21-app-9b430d776820.herokuapp.com','.herokuapp.com']
+    ALLOWED_HOSTS = ['localhost', 'https://b21-app-9b430d776820.herokuapp.com']
 else:
     ALLOWED_HOSTS = ['localhost', 'https://b21-app-9b430d776820.herokuapp.com', '127.0.0.1']
 
