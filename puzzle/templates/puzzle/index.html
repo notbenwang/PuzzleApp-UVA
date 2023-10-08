@@ -1,0 +1,32 @@
+{% load socialaccount %}
+<html>
+<body>
+<h1>Puzzle App To Be Named</h1>
+{% if user.is_authenticated %}
+  <p>Welcome, You are logged in as {{ user.username }}</p>
+  <p>Your account name is {{ user.email }}</p>
+<p>{{ user.id }}</p>
+  <a href="{% url 'dashboard' %}">Go to dashboard</a>
+  <a href="{% url 'account_logout' %}">Sign out</a>
+
+{% else %}
+  <a href="{% provider_login_url 'google' %}">Login With Google</a>
+{% endif %}
+</body>
+</html>
+
+
+<!--
+/***************************************************************************************
+*  REFERENCES
+*  Author: Geoffrey Mungai
+*  Date: December 18, 2020
+*  URL: https://www.section.io/engineering-education/django-google-oauth/
+*
+*  Title: User Registration in Django using Google OAuth
+*  Used for integrating social login into this template as well as doing required configuration
+*  in settings.py and Google console
+*
+***************************************************************************************/
+
+-->
