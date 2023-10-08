@@ -95,7 +95,9 @@ ROOT_URLCONF = 'mysite.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': ['puzzle/templates/puzzle', 'puzzle/templates/account', 'puzzle/templates/socialaccount'],
+        'DIRS': ['puzzle/templates/puzzle', 'puzzle/templates/account', 
+                 'puzzle/templates/socialaccount', 
+                 os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
