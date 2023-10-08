@@ -27,10 +27,10 @@ SECRET_KEY = os.environ.get('django-insecure-j72_mh$bc7mr7q^fcb11i%fjksc&d85-azt
                             default=secrets.token_urlsafe(nbytes=64))
 
 IS_HEROKU_APP = "DYNO" in os.environ and not "CI" in os.environ
-if not IS_HEROKU_APP:
-    DEBUG = True
+# if not IS_HEROKU_APP:
+#     DEBUG = True
 # SECURITY WARNING: don't run with debug turned on in production!
-
+DEBUG = True
 
 if IS_HEROKU_APP:
     ALLOWED_HOSTS = ['localhost', 'b21-app-9b430d776820.herokuapp.com']
