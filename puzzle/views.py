@@ -15,7 +15,7 @@ def login(request):
 
 def dashboard(request):
     social_id = request.user.id
-
+    
     try:
         custom_user = CustomUser.objects.get(social_id=social_id)
         is_admin = custom_user.is_admin
