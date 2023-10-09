@@ -18,12 +18,16 @@ def dashboard(request):
 
     try:
         custom_user = CustomUser.objects.get(social_id=social_id)
+        is_admin = custom_user.is_admin
     except CustomUser.DoesNotExist:
         if social_id:
             custom_user = CustomUser(social_id=social_id, is_admin=False)
             custom_user.save()
+            is_admin = False
+        else:
+            is_admin = False
 
-    return render(request, "dashboard.html", {"is_admin": custom_user.is_admin})
+    return render(request, "dashboard.html", {"is_admin": is_admin})
 
 
 # Resource
