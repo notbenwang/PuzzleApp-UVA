@@ -23,8 +23,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('django-insecure-j72_mh$bc7mr7q^fcb11i%fjksc&d85-aztak6a=0xp0)&jk++',
-                            default=secrets.token_urlsafe(nbytes=64))
+# SECRET_KEY = os.environ.get('django-insecure-j72_mh$bc7mr7q^fcb11i%fjksc&d85-aztak6a=0xp0)&jk++',
+#                             default=secrets.token_urlsafe(nbytes=64))
+SECRET_KEY = 'django-insecure-j72_mh$bc7mr7q^fcb11i%fjksc&d85-aztak6a=0xp0)&jk++'
 
 IS_HEROKU_APP = "DYNO" in os.environ and not "CI" in os.environ
 # if not IS_HEROKU_APP:
@@ -130,6 +131,7 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
+
 # DATABASES = {
 #         'default': {
 #             'ENGINE': 'django.db.backends.sqlite3',
@@ -138,7 +140,6 @@ else:
 #     }
 # db_from_env = dj_database_url.config(conn_max_age=600)
 # DATABASES['default'].update(db_from_env)
-
 
 
 # Password validation
