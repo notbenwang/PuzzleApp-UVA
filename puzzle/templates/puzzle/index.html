@@ -1,20 +1,27 @@
 {% load socialaccount %}
+{% load static %}
 
 <html>
 <body>
-<h1>Puzzle App To Be Named</h1>
-{% if user.is_authenticated %}
-  <p>Welcome, You are logged in as {{ user.username }}</p>
-  <p>Your account name is {{ user.email }}</p>
-<p>{{ user.id }}</p>
-  <a href="{% url 'dashboard' %}">Go to dashboard</a>
-  <a href="{% url 'account_logout' %}">Sign out</a>
 
-{% else %}
-  <a href="{% provider_login_url 'google' %}">Login With Google</a>
-{% endif %}
+  <h1>Puzzle App To Be Named</h1>
+
+  {% if user.is_authenticated %}
+    
+    <p>Welcome, You are logged in as {{ user.username }}</p>
+    <p>Your account name is {{ user.email }}</p>
+    <p>{{ user.id }}</p>
+    
+    <p><a href="{% url 'dashboard' %}">Go to dashboard</a></p>
+    <p><a href="{% url 'add' %}">Add a puzzle</a></p>
+    <p><a href="{% url 'account_logout' %}">Sign out</a></p>
+
+  {% else %}
+    <a href="{% provider_login_url 'google' %}">Login With Google</a>
+  {% endif %}
 </body>
 </html>
+
 
 
 <!--

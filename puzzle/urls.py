@@ -5,9 +5,10 @@ from django.views.generic import TemplateView
 from . import views
 
 urlpatterns = [
-    path('', TemplateView.as_view(template_name="index.html")),
+    path('', TemplateView.as_view(template_name="index.html"), name="index"),
+    path('dashboard/', views.dashboard, name="dashboard"),
+    path("add", views.AddView.as_view(), name="add")
     # path('accounts/', include('allauth.urls')),
-    path('dashboard/', views.dashboard, name="dashboard")
     # path('logout', LogoutView.as_view()),
     # path('accounts/google/login/', views.login, name='account_login'),
 ]

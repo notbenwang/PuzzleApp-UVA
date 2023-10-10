@@ -1,9 +1,15 @@
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.views import generic
 from allauth.socialaccount.models import SocialAccount
+from .models import Puzzle
 
 from .models import CustomUser
 
+class AddView(generic.ListView):
+    template_name = "puzzle/add.html"
+    def get_queryset(self):
+        return Puzzle.objects.all
 
 def index(request):
     return HttpResponse("You are at the puzzle index")
