@@ -6,8 +6,13 @@ from .models import Puzzle
 
 from .models import CustomUser
 
-class AddView(generic.ListView):
-    template_name = "puzzle/add.html"
+class AddHuntView(generic.ListView):
+    template_name = "puzzle/add_hunt.html"
+    def get_queryset(self):
+        return Puzzle.objects.all
+
+class AddPuzzleView(generic.ListView):
+    template_name = "puzzle/add_puzzle.html"
     def get_queryset(self):
         return Puzzle.objects.all
 
