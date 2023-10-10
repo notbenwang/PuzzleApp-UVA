@@ -1,14 +1,17 @@
 {% load socialaccount %}
+{% load static %}
 <h3>Dashboard</h3>
 
 {% if user.is_authenticated %}
-<p>Name: {{ user.username }}</p>
-<p>Account name: {{user.email}}</p>
-<p>{{ user.id }}</p>
+    <p>Name: {{ user.username }}</p>
+    <p>Account name: {{user.email}}</p>
+    <p>{{ user.id }}</p>
 {% if is_admin != False %}
-<p>This user is an administrator</p>
+    <p>This user is an administrator</p>
 {% else %}
-<p>This user in not an administrator</p>
+    <p>This user in not an administrator</p>
+{% endif %}
 {% endif %}
 
-{% endif %}
+<a href="{% url 'index' %}">Go back</a>
+ 
