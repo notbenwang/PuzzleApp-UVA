@@ -16,6 +16,9 @@ class AddPuzzleView(generic.ListView):
     def get_queryset(self):
         return Puzzle.objects.all
 
+def add_puzzle(request):
+    return render(request, "puzzle/add_hunt.html")
+
 def index(request):
     return HttpResponse("You are at the puzzle index")
 
