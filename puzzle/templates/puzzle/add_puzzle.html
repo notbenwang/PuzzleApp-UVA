@@ -1,6 +1,3 @@
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,27 +11,48 @@
 <body>
     <h1>Add Puzzle Page</h1>
     <!-- MAP OBJECT -->
-    <div id="map" style="height: 600px; width: 900px"></div> 
-
+    <div id="map" style="height: 500px; width: 800px"></div> 
+    
+    <label for="customRange1" class="form-label">Change Tolerance Level</label>
+    <input type="range" class="form-range" id="tolerance_range" min="5" max="50" value="10">
+    
     <script>
+        const input = document.querySelector("#tolerance_range");
+        
+        var lat, lng; 
         var map = L.map('map').setView([38.033554, -78.507980], 17);
         googleStreets = L.tileLayer('http://{s}.google.com/vt?lyrs=m&x={x}&y={y}&z={z}',{
-        maxZoom: 20,
+        maxZoom: 20, minZoom:14,
         subdomains:['mt0','mt1','mt2','mt3']
         }).addTo(map);
+        var radius = 10;
         
-        var marker = new Array();
+        input.addEventListener("input", (event) => {
+            radius = input.value*1.01;
+            if (circle.length != 0 && marker.length != 0){
+                map.removeLayer(circle[0]);
+                circle.pop();
+                c = L.circle([lat,lng], radius).addTo(map);
+                circle.push(c);
+            }
+        })
 
+        var marker = new Array();
+        var circle = new Array();
         map.on('click', (event) => {
             if (marker.length != 0) {
                 map.removeLayer(marker[0]);
                 marker.pop();
+                map.removeLayer(circle[0]);
+                circle.pop();
             }
-            m = L.marker([event.latlng.lat, event.latlng.lng]).addTo(map);
+            lat = event.latlng.lat; lng = event.latlng.lng;
+            m = L.marker([lat, lng]).addTo(map);
             marker.push(m);
             map.addLayer(m)
+            c = L.circle([lat,lng], radius).addTo(map);
+            circle.push(c);
             var coords = event.latlng; //  <-----COORDS GUESS WILL BE HERE
-            console.log(coords); // PLACEHOLDER, prints coords to 
         })
     </script>
 
