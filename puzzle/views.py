@@ -1,31 +1,42 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse
 from django.views import generic
 from allauth.socialaccount.models import SocialAccount
-from .models import Puzzle
+from .models import Puzzle, Hunt
 
 from .models import CustomUser
 
-class AddHuntView(generic.ListView):
+class AddHuntView(generic.DetailView):
+    model = Hunt
     template_name = "puzzle/add_hunt.html"
-    def get_queryset(self):
-        return Puzzle.objects.all
-
-class AddPuzzleView(generic.ListView):
+    
+class AddPuzzleView(generic.DetailView):
+    model = Hunt
     template_name = "puzzle/add_puzzle.html"
-    def get_queryset(self):
-        return Puzzle.objects.all
-
-def add_puzzle(request):
-    return render(request, "puzzle/add_hunt.html")
+    
 
 def index(request):
     return HttpResponse("You are at the puzzle index")
 
+def add_temp_hunt(request, hunt_id):
+    try:
+        p = Hunt.objects.get(pk=hunt_id)
+        return HttpResponseRedirect(reverse("add_hunt_view", args=(p.id,)))
+    except Hunt.DoesNotExist:
+        p = Hunt(title="",summary="",approved=False)
+        p.save()
+        return HttpResponseRedirect(reverse("add_hunt_view",args=(p.id,)))
+    
+def remove_temp_hunt(request, hunt_id):
+    Hunt.objects.filter(id=hunt_id).delete()
+    return HttpResponseRedirect(reverse("index"))
+
+def submit_hunt(request, hunt_id):
+    return 
 
 def login(request):
     return render(request, "login.html")
-
 
 def dashboard(request):
     social_id = request.user.id

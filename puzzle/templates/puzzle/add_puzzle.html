@@ -56,8 +56,8 @@
         })
     </script>
 
-    <p><a href="{% url 'submit_puzzle' %}">Submit</a></p>
-    <p><a href="{% url 'add_hunt' %}">Cancel</a></p>
+    <p><a href="{% url 'submit_puzzle' hunt.id %}">Submit</a></p>
+    <p><a href="{% url 'add_temp_hunt' hunt.id %}">Cancel</a></p>
 </body>
 </html>
 
