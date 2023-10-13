@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <link rel="shortcut icon" href="">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4zAcfYsYZqZKz4I1OikA8pqWxFkEk5oM&callback=initMap">
+    </script>
 
     <title>Add puzzle </title>
 </head>
@@ -12,49 +13,44 @@
     <h1>Add Puzzle Page</h1>
     <!-- MAP OBJECT -->
     <div id="map" style="height: 500px; width: 800px"></div> 
+    <script>
     
+        let map;
+        let markers = [];
+        function initMap() {
+            const myLatlng = { lat: 38.033554, lng: -78.507980 };
+
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: myLatlng,
+                zoom: 17,
+            });
+            marker = new google.maps.Marker({
+                position: { lat: 38.033554, lng: -78.507980 },
+                map: map,
+            })
+            map.addListener("click", (event) => {
+                addMarker(event.latLng);
+            });
+            function addMarker(position) {
+                if (markers.length != 0){
+                    markers[0].setMap(null);
+                    markers.pop();
+                }
+                const marker = new google.maps.Marker({
+                    position,
+                    map,
+                });
+                markers.push(marker);
+            }  
+        
+}
+
+    </script>
+
     <label for="customRange1" class="form-label">Change Tolerance Level</label>
     <input type="range" class="form-range" id="tolerance_range" min="5" max="50" value="10">
     
-    <script>
-        const input = document.querySelector("#tolerance_range");
-        
-        var lat, lng; 
-        var map = L.map('map').setView([38.033554, -78.507980], 17);
-        googleStreets = L.tileLayer('http://{s}.google.com/vt?lyrs=m&x={x}&y={y}&z={z}',{
-        maxZoom: 20, minZoom:14,
-        subdomains:['mt0','mt1','mt2','mt3']
-        }).addTo(map);
-        var radius = 10;
-        
-        input.addEventListener("input", (event) => {
-            radius = input.value*1.01;
-            if (circle.length != 0 && marker.length != 0){
-                map.removeLayer(circle[0]);
-                circle.pop();
-                c = L.circle([lat,lng], radius).addTo(map);
-                circle.push(c);
-            }
-        })
-
-        var marker = new Array();
-        var circle = new Array();
-        map.on('click', (event) => {
-            if (marker.length != 0) {
-                map.removeLayer(marker[0]);
-                marker.pop();
-                map.removeLayer(circle[0]);
-                circle.pop();
-            }
-            lat = event.latlng.lat; lng = event.latlng.lng;
-            m = L.marker([lat, lng]).addTo(map);
-            marker.push(m);
-            map.addLayer(m)
-            c = L.circle([lat,lng], radius).addTo(map);
-            circle.push(c);
-            var coords = event.latlng; //  <-----COORDS GUESS WILL BE HERE
-        })
-    </script>
+    
 
     <p><a href="{% url 'submit_puzzle' hunt.id %}">Submit</a></p>
     <p><a href="{% url 'add_temp_hunt' hunt.id %}">Cancel</a></p>
@@ -63,14 +59,6 @@
 
 <!-- 
 # Resource
-# URL: https://stackoverflow.com/questions/33343881/leaflet-in-google-maps
-# Name: Tek Kshetri
-# Date: Nov 12 2019
-# Used for help on turning leaflet map into google map tiles
+# URL: https://developers.google.com/maps/documentation/javascript/load-maps-js-api#dynamic-library-import
 
-# Resource
-# URL: https://www.youtube.com/watch?v=E2bhoCOMlsA&ab_channel=BugBytes
-# Name: Bug Bytes
-# Date: Feb 6 2023
-# Used for help on LeafletJS (Interactive Maps)
  -->
