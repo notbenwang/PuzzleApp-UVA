@@ -22,6 +22,7 @@
 
         function initMap() {
             const myLatlng = { lat: 38.033554, lng: -78.507980 };
+            document.getElementById('latLng').value = "(38.033554, -78.507980)";
             const input = document.querySelector("#tolerance_range");
             // Add map
             map = new google.maps.Map(document.getElementById("map"), {
@@ -51,7 +52,6 @@
             // Add click event
             map.addListener("click", (event) => {
                 document.getElementById('latLng').value = event.latLng;
-                console.log(typeof document.getElementById('latLng'));
                 addMarker(event.latLng);
             });
             // Add input event
