@@ -15,7 +15,10 @@ class AddHuntView(generic.DetailView):
 class AddPuzzleView(generic.DetailView):
     model = Hunt
     template_name = "puzzle/add_puzzle.html"
-    
+
+class DetailPuzzleView(generic.DetailView):
+    model = Puzzle
+    template_name = "detail_puzzle.html"
 
 def index(request):
     return HttpResponse("You are at the puzzle index")
@@ -33,7 +36,7 @@ def remove_temp_hunt(request, hunt_id):
     Hunt.objects.filter(id=hunt_id).delete()
     return HttpResponseRedirect(reverse("index"))
 
-def submit_hunt(request, hunt_id):
+def submit_puzzle(request, hunt_id):
     r = request.POST.get("radius")
     latLng = request.POST.get("latLng")
     arr = latLng[1:-1].split(", ")
@@ -42,6 +45,9 @@ def submit_hunt(request, hunt_id):
     p = Puzzle(prompt_text="test",hunt_id=h, radius=r,long=float(arr[1]), lat=float(arr[0]))
     p.save()
     return HttpResponseRedirect(reverse("add_temp_hunt", args=(h.id,)))
+
+def submit_hunt(request, hunt_id):
+    return HttpResponseRedirect(reverse("index"))
 
 def login(request):
     return render(request, "login.html")

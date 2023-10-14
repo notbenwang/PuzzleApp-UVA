@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p>TEMPORARY; should make everything like radius, +hints editable here like the add_puzzle view</p>
+    <p>Puzzle ID: {{puzzle.id}}</p>
+    <p>Radius: {{puzzle.radius}}</p>
+    <p>Location: {{puzzle.lat}}, {{puzzle.long}}</p>
+    <p>Insert Some Visualization</p>
+    <p><a href="{% url 'add_temp_hunt' puzzle.hunt_id.id %}">Cancel</a></p>
+</body>
+</html>
