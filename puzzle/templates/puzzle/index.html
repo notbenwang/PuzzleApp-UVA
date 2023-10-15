@@ -2,9 +2,11 @@
 {% load static %}
 
 <html>
+<head>
+  <link rel="stylesheet" href="{% static 'puzzle/css/splash_screen.css' %}" />
+</head>
 <body>
-
-  <h1>Puzzle App To Be Named</h1>
+  <h1>Puzzle App @ UVA</h1>
 
   {% if user.is_authenticated %}
     

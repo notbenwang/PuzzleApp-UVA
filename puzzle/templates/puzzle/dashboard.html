@@ -1,6 +1,9 @@
+{% extends "base.html" %}
 {% load socialaccount %}
 {% load static %}
-<h3>Dashboard</h3>
+
+{% block content %}
+<h3>My Dashboard</h3>
 
 {% if user.is_authenticated %}
     <p>Name: {{ user.username }}</p>
@@ -14,4 +17,5 @@
 {% endif %}
 
 <a href="{% url 'index' %}">Go back</a>
+{% endblock %}
  
