@@ -28,10 +28,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-j72_mh$bc7mr7q^fcb11i%fjksc&d85-aztak6a=0xp0)&jk++'
 
 IS_HEROKU_APP = "DYNO" in os.environ and not "CI" in os.environ
-# if not IS_HEROKU_APP:
-#     DEBUG = True
+if not IS_HEROKU_APP:
+    DEBUG = True
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+
 
 if IS_HEROKU_APP:
     ALLOWED_HOSTS = ['localhost', 'b21-app-9b430d776820.herokuapp.com']
@@ -172,6 +172,7 @@ USE_I18N = True
 
 USE_TZ = True
 
+GOOGLE_API_KEY = "AIzaSyB4zAcfYsYZqZKz4I1OikA8pqWxFkEk5oM"
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
