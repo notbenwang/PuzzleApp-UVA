@@ -42,11 +42,15 @@ def submit_puzzle(request, hunt_id):
     arr = latLng[1:-1].split(", ")
 
     h = Hunt.objects.get(pk=hunt_id)
+    # Should change "test" to some Post object
     p = Puzzle(prompt_text="test",hunt_id=h, radius=r,long=float(arr[1]), lat=float(arr[0]))
     p.save()
     return HttpResponseRedirect(reverse("add_temp_hunt", args=(h.id,)))
 
 def submit_hunt(request, hunt_id):
+    h = Hunt.objects.get(pk=hunt_id)
+    h.submitted = True
+    h.save()
     return HttpResponseRedirect(reverse("index"))
 
 def login(request):

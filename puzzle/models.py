@@ -7,7 +7,8 @@ class CustomUser(models.Model):
 class Hunt(models.Model):
     title = models.CharField(max_length=200)
     summary = models.CharField(max_length=2000)
-    approved = models.BooleanField()
+    approved = models.BooleanField(default=False)
+    submitted = models.BooleanField(default=False)
 
 class Puzzle(models.Model):
     prompt_text = models.CharField(max_length=200)
