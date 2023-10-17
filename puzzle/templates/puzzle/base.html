@@ -22,13 +22,13 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="/dashboard">Dashboard</a>
+        <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
       </li>
       <li>
-          <a class="nav-link" href="/add_hunt">Add Puzzle</a>
+          <a class="nav-link" href="{% url 'add_temp_hunt' 1 %}">Add Puzzle</a>
       </li>
       <li>
-          <a class="nav-link" href="/accounts/logout">Log Out</a>
+          <a class="nav-link" href="{% url 'account_logout' %}">Log Out</a>
       </li>
           </ul>
       </div>

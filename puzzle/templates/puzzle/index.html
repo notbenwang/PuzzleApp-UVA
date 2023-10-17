@@ -1,14 +1,18 @@
 {% load socialaccount %}
 {% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
 
 <html>
 <head>
   <link rel="stylesheet" href="{% static 'puzzle/css/splash_screen.css' %}" />
 </head>
 <body>
-  <h1>Puzzle App @ UVA</h1>
+
 
   {% if user.is_authenticated %}
+    <h1>Puzzle App @ UVA</h1>
     
     <p>Welcome, You are logged in as {{ user.username }}</p>
     <p>Your account name is {{ user.email }}</p>
@@ -19,7 +23,11 @@
     <p><a href="{% url 'account_logout' %}">Sign out</a></p>
 
   {% else %}
-    <a href="{% provider_login_url 'google' %}">Login With Google</a>
+  <div class="container text-center bg-white shadow p-3 mb-5 mt-5 bg-white rounded py-5 w-50">
+    <h1 class="text-dark">Puzzle App @ UVA</h1>
+    <a href="{% provider_login_url 'google' %}" class="btn btn-success mt-3">Login With Google</a>
+
+  </div>
   {% endif %}
 </body>
 </html>
