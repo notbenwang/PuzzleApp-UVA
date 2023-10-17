@@ -1,3 +1,7 @@
 <h1>Add Hunt Page</h1>
-<p><a href="{% url 'add_puzzle' %}">add puzzle</a></p>
-<p><a href="{% url 'index' %}">go back</a></p>
+{% for puzzle in hunt.puzzle_set.all %}
+    <p><a href="{% url 'detail_puzzle' puzzle.id hunt.id %}">Puzzle: {{puzzle.id}}</a></p>
+{% endfor %}
+<p><a href="{% url 'add_puzzle_view' hunt.id %}">add puzzle</a></p>
+<p><a href="{% url 'submit_hunt' hunt.id %}">SUBMIT HUNT</a></p>
+<p><a href="{% url 'remove_temp_hunt' hunt.id %}">go back (warning: this will delete all progress)</a></p>
