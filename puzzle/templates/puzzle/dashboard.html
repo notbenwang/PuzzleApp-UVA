@@ -12,10 +12,12 @@
 <div class="container mx-3 my-3 text-center">
     <h3 class="text-light">My Dashboard</h3>
     {% for hunt in hunts %}
-    <div class="container text-center bg-white shadow  bg-white rounded py-2 w-25">
+    <a href="{% url 'detail_puzzle' pk=hunt.pk puzzle_id=1 %}" class="item-button">
+        <div class="container text-center bg-white shadow  bg-white rounded py-2 w-25">
             <h5>{{ hunt.title }}</h5>
             <i>{{ hunt.summary }}</i>
         </div>
+    </a>
     <p></p>
     {% endfor %}
     {{ puzzles }}
