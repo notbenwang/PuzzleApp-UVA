@@ -70,7 +70,9 @@ def dashboard(request):
         else:
             is_admin = False
 
-    return render(request, "dashboard.html", {"is_admin": is_admin})
+    hunts = Hunt.objects.filter(approved=True)
+
+    return render(request, "dashboard.html", {"is_admin": is_admin, "hunts": hunts})
 
 
 # Resource
