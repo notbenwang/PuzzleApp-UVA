@@ -1,7 +1,7 @@
 body {
     background-image: linear-gradient(to right bottom, #30b5d1, #00c1b6, #4bc681, #9cc342, #ebb212);
     height: 100%;
-    overflow: hidden;
+    background-size: 100% 100%;
 }
 
 h1 {

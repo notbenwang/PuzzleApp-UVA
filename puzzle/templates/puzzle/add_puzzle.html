@@ -1,4 +1,10 @@
+{% extends "base.html" %}
 {% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,13 +13,18 @@
     <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4zAcfYsYZqZKz4I1OikA8pqWxFkEk5oM&callback=initMap">
     </script>
+      <link rel="stylesheet" href="{% static 'puzzle/css/splash_screen.css' %}" />
 
     <title>Add puzzle </title>
 </head>
 <body>
-    <h1>Add Puzzle Page</h1>
+
+
+    <div class="container mx-3 my-3 text-center">
+      <div class="container text-center bg-white shadow p-1 mb-2 mt-2 bg-white rounded py-3 w-75">
+              <h3>Add A Puzzle</h3>
     <!-- MAP OBJECT -->
-    <div id="map" style="height: 500px; width: 800px"></div> 
+    <div id="map" style="height: 50%"></div>
     <script>
         let map;
         let markers = [];
@@ -100,15 +111,21 @@
     <form action="{% url 'submit_puzzle' hunt.id %}" method="post">
         {% csrf_token %}
         <div class="text-center">
-            <button type="submit" class="btn btn-primary">Submit</button>
+
         </div>
         <input type="hidden" id="latLng" name="latLng">
         <label for="customRange1" class="form-label">Change Tolerance Level</label>
-        <input type="range" class="form-range" id="tolerance_range" min="5" max="50" value="10" name="radius">
+        <div class="container w-50">
+            <input type="range" class="form-range" id="tolerance_range" min="5" max="50" value="10" name="radius">
+        </div>
     </form>
-    <p><a href="{% url 'add_temp_hunt' hunt.id %}">Cancel</a></p>
+    <p><a href="{% url 'add_temp_hunt' hunt.id %}" class="btn btn-danger">Cancel</a>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </p>
+      </div></div>
 </body>
 </html>
+{% endblock content %}
 
 <!-- 
 # Resource
