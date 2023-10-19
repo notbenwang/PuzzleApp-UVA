@@ -118,11 +118,12 @@
         <div class="container w-50">
             <input type="range" class="form-range" id="tolerance_range" min="5" max="50" value="10" name="radius">
         </div>
-    </form>
-    <p><a href="{% url 'add_temp_hunt' hunt.id %}" class="btn btn-danger">Cancel</a>
         <button type="submit" class="btn btn-primary">Submit</button>
-    </p>
-      </div></div>
+            <a href="{% url 'add_temp_hunt' hunt.id %}" class="btn btn-danger">Cancel</a>
+    </form>
+
+      </div>
+    </div>
 </body>
 </html>
 {% endblock content %}
