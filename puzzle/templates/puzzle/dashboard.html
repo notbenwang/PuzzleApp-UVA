@@ -10,7 +10,7 @@
   <link rel="stylesheet" href="{% static 'puzzle/css/splash_screen.css' %}" />
 </head>
 <div class="container mx-3 my-3 text-center">
-    <h3 class="text-light">My Dashboard</h3>
+    <h3 class="text-light">Published Puzzles</h3>
     {% for hunt in hunts %}
     <div class="container w-25">
     <a href="{% url 'detail_puzzle' pk=hunt.pk puzzle_id=1 %}" class="item-button">
