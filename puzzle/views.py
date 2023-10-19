@@ -53,6 +53,10 @@ def submit_hunt(request, hunt_id):
     h.save()
     return HttpResponseRedirect(reverse("index"))
 
+def view_hunt(request, hunt_id):
+    hunt = Hunt.objects.get(pk=hunt_id)
+    return render(request, "detail_hunt.html", {"hunt": hunt})
+
 def login(request):
     return render(request, "login.html")
 
