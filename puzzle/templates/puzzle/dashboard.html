@@ -1,3 +1,7 @@
+<!--Learned format for passing url parameters
+URL: https://stackoverflow.com/questions/65379988/django-how-to-pass-multiple-parameters-to-url
+-->
+
 {% extends "base.html" %}
 {% load socialaccount %}
 {% load static %}
@@ -14,7 +18,7 @@
     {% for hunt in hunts %}
     <div class="container w-25">
     <a href="{% url 'view_hunt' hunt_id=hunt.id %}" class="item-button">
-        <div class="container text-center bg-white shadow  bg-white rounded py-2 btn">
+        <div class="container text-center bg-white shadow  rounded py-2 btn">
             <h5 >{{ hunt.title }}</h5>
             <i>{{ hunt.summary }}</i>
         </div>
