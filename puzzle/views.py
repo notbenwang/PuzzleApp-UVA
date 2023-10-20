@@ -48,10 +48,6 @@ def add_temp_hunt(request, hunt_id):
 
             return HttpResponseRedirect(reverse("add_hunt_view",args=(p.id,)))
 
-    
-def remove_temp_hunt(request, hunt_id):
-    Hunt.objects.filter(id=hunt_id).delete()
-    return HttpResponseRedirect(reverse("index"))
 
 def submit_puzzle(request, hunt_id):
     r = request.POST.get("radius")

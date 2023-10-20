@@ -8,7 +8,6 @@ urlpatterns = [
     path('', TemplateView.as_view(template_name="index.html"), name="index"),
     path('dashboard/', views.dashboard, name="dashboard"),
     path("<int:hunt_id>/add_temp_hunt", views.add_temp_hunt, name="add_temp_hunt"),
-    path("<int:hunt_id>/remove_temp_hunt", views.remove_temp_hunt, name="remove_temp_hunt"),
     path("<int:pk>/add_hunt", views.AddHuntView.as_view(), name="add_hunt_view"),
     path("<int:pk>/add_puzzle", views.AddPuzzleView.as_view(), name="add_puzzle_view"),
     path("<int:hunt_id>/submit_puzzle", views.submit_puzzle, name="submit_puzzle"),
