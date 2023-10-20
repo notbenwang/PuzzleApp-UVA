@@ -9,6 +9,7 @@ class Hunt(models.Model):
     summary = models.CharField(max_length=2000)
     approved = models.BooleanField(default=False)
     submitted = models.BooleanField(default=False)
+    creator = models.ForeignKey(CustomUser, on_delete=models.DO_NOTHING, default=1)
 
 class Puzzle(models.Model):
     prompt_text = models.CharField(max_length=200)

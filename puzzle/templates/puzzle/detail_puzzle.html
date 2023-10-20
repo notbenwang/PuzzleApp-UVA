@@ -1,16 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "base_no_add.html" %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load static %}
+
+{% block content %}
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Puzzle Detail</title>
+      <link rel="stylesheet" href="{% static 'puzzle/css/splash_screen.css' %}" />
 </head>
 <body>
+<div class="container mx-3 my-3 text-center">
+      <div class="container text-center bg-white shadow p-1 mb-2 mt-2 bg-white rounded p-3 w-50">
     <p>TEMPORARY; should make everything like radius, +hints editable here like the add_puzzle view</p>
     <p>Puzzle ID: {{puzzle.id}}</p>
     <p>Radius: {{puzzle.radius}}</p>
     <p>Location: {{puzzle.lat}}, {{puzzle.long}}</p>
     <p>Insert Some Visualization</p>
-    <p><a href="{% url 'add_temp_hunt' puzzle.hunt_id.id %}">Cancel</a></p>
+    <p><a href="{% url 'add_temp_hunt' puzzle.hunt_id.id %}" class="btn btn-info">
+        <span class="text-light" >Back to Hunt</span>
+    </a></p>
+      </div></div>
 </body>
-</html>
+{% endblock content %}

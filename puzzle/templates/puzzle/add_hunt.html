@@ -1,7 +1,27 @@
-<h1>Add Hunt Page</h1>
-{% for puzzle in hunt.puzzle_set.all %}
-    <p><a href="{% url 'detail_puzzle' puzzle.id hunt.id %}">Puzzle: {{puzzle.id}}</a></p>
-{% endfor %}
-<p><a href="{% url 'add_puzzle_view' hunt.id %}">add puzzle</a></p>
-<p><a href="{% url 'submit_hunt' hunt.id %}">SUBMIT HUNT</a></p>
-<p><a href="{% url 'remove_temp_hunt' hunt.id %}">go back (warning: this will delete all progress)</a></p>
+{% extends "base_no_add.html" %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block content %}
+<head>
+  <link rel="stylesheet" href="{% static 'puzzle/css/splash_screen.css' %}" />
+</head>
+<div class="container mx-3 my-3 text-center">
+      <div class="container text-center bg-white shadow p-1 mb-2 mt-2 bg-white rounded py-3 w-50">
+    <h3 class="text-dark">Add A Hunt</h3>
+    {% for puzzle in hunt.puzzle_set.all %}
+        <p><a href="{% url 'detail_puzzle' puzzle.id hunt.id %}">
+            <span style="text-decoration: none"> > Puzzle: {{puzzle.id}} </span>
+        </a></p>
+    {% endfor %}
+    <p><a href="{% url 'add_puzzle_view' hunt.id %}" class="btn btn-info">
+        <span class="text-light">Add Puzzle</span>
+    </a></p>
+    <p><a href="{% url 'submit_hunt' hunt.id %}" class="btn btn-success">Submit Hunt</a>
+        <a href="{% url 'dashboard' %}" class="btn btn-danger">Go Back </a></p>
+
+      </div>
+</div>
+{% endblock %}

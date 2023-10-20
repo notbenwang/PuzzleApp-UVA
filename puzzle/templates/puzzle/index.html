@@ -1,23 +1,33 @@
 {% load socialaccount %}
 {% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
 
 <html>
+<head>
+  <link rel="stylesheet" href="{% static 'puzzle/css/splash_screen.css' %}" />
+</head>
 <body>
 
-  <h1>Puzzle App To Be Named</h1>
 
   {% if user.is_authenticated %}
+    <div class="container text-center bg-white shadow p-3 mb-5 mt-5 bg-white rounded py-5 w-50">
     
-    <p>Welcome, You are logged in as {{ user.username }}</p>
-    <p>Your account name is {{ user.email }}</p>
-    <p>{{ user.id }}</p>
+    <h2>Welcome, {{ user.username }}</h2>
     
-    <p><a href="{% url 'dashboard' %}">Go to dashboard</a></p>
-    <p><a href="{% url 'add_temp_hunt' 1 %}">Add a Hunt</a></p>
-    <p><a href="{% url 'account_logout' %}">Sign out</a></p>
+    <div class="d-flex flex-column align-items-center">
+      <a href="{% url 'dashboard' %}" class="btn btn-success mt-1 w-50" >Go to dashboard</a>
+      <a href="{% url 'add_temp_hunt' 1 %}" class="btn btn-success mt-1 w-50">Add a Hunt</a>
+      <a href="{% url 'account_logout' %}" class="btn btn-success mt-1 w-50">Sign out</a>
+    </div>
 
   {% else %}
-    <a href="{% provider_login_url 'google' %}">Login With Google</a>
+  <div class="container text-center bg-white shadow p-3 mb-5 mt-5 bg-white rounded py-5 w-50">
+    <h1 class="text-dark">Puzzle App @ UVA</h1>
+    <a href="{% provider_login_url 'google' %}" class="btn btn-success mt-3">Login With Google</a>
+
+  </div>
   {% endif %}
 </body>
 </html>
