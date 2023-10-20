@@ -20,10 +20,22 @@ class DetailPuzzleView(generic.DetailView):
     model = Puzzle
     template_name = "detail_puzzle.html"
 
+def create_custom_user(request):
+    social_id = request.user.id
+
+    try:
+        custom_user = CustomUser.objects.get(social_id=social_id)
+    except CustomUser.DoesNotExist:
+        if social_id:
+            custom_user = CustomUser(social_id=social_id, is_admin=False)
+            custom_user.save()
+            is_admin = False
+
 def index(request):
     return HttpResponse("You are at the puzzle index")
 
 def add_temp_hunt(request, hunt_id):
+    create_custom_user(request)
     try:
         p = Hunt.objects.get(pk=hunt_id)
         return HttpResponseRedirect(reverse("add_hunt_view", args=(p.id,)))
@@ -75,7 +87,7 @@ def login(request):
 
 def dashboard(request):
     social_id = request.user.id
-    
+
     try:
         custom_user = CustomUser.objects.get(social_id=social_id)
         is_admin = custom_user.is_admin
