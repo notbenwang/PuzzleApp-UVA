@@ -28,9 +28,26 @@ def add_temp_hunt(request, hunt_id):
         p = Hunt.objects.get(pk=hunt_id)
         return HttpResponseRedirect(reverse("add_hunt_view", args=(p.id,)))
     except Hunt.DoesNotExist:
-        p = Hunt(title="",summary="",approved=False)
-        p.save()
-        return HttpResponseRedirect(reverse("add_hunt_view",args=(p.id,)))
+        try:
+            #First check to see if last hunt was not submitted. If so, use that hunt
+            creator = CustomUser.objects.get(social_id=request.user.id)
+            most_recent_hunt = Hunt.objects.filter(creator=creator).latest("pk")
+            if not most_recent_hunt.submitted:
+                p = most_recent_hunt
+            else:
+                creator = CustomUser.objects.get(social_id=request.user.id)
+                p = Hunt(title="",summary="",approved=False, creator=creator)
+                p.save()
+
+            return HttpResponseRedirect(reverse("add_hunt_view",args=(p.id,)))
+
+        except Hunt.DoesNotExist:
+            creator = CustomUser.objects.get(social_id=request.user.id)
+            p = Hunt(title="", summary="", approved=False, creator=creator)
+            p.save()
+
+            return HttpResponseRedirect(reverse("add_hunt_view",args=(p.id,)))
+
     
 def remove_temp_hunt(request, hunt_id):
     Hunt.objects.filter(id=hunt_id).delete()
@@ -51,7 +68,7 @@ def submit_hunt(request, hunt_id):
     h = Hunt.objects.get(pk=hunt_id)
     h.submitted = True
     h.save()
-    return HttpResponseRedirect(reverse("index"))
+    return HttpResponseRedirect(reverse("dashboard"))
 
 def view_hunt(request, hunt_id):
     hunt = Hunt.objects.get(pk=hunt_id)
@@ -84,3 +101,9 @@ def dashboard(request):
 # Name: Dracontis
 # Date: June 7 2015
 # Used to figure out how to handle user not exist exception
+
+#Resource
+# URL: https://stackoverflow.com/questions/39944474/django-get-the-max-pk
+# Name: CodeTherapy
+# Date: Oct 31 2021
+# Used to figure out how to get latest obejct by pk
