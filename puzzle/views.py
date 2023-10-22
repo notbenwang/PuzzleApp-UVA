@@ -20,8 +20,8 @@ class DetailPuzzleView(generic.DetailView):
     model = Puzzle
     template_name = "detail_puzzle.html"
 class AddHintView(generic.DetailView):
-    model = Puzzle 
-
+    model = Hunt 
+    template_name = "add_hint.html"
 def create_custom_user(request):
     social_id = request.user.id
 
