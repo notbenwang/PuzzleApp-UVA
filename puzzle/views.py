@@ -19,6 +19,8 @@ class AddPuzzleView(generic.DetailView):
 class DetailPuzzleView(generic.DetailView):
     model = Puzzle
     template_name = "detail_puzzle.html"
+class AddHintView(generic.DetailView):
+    model = Puzzle 
 
 def create_custom_user(request):
     social_id = request.user.id
@@ -59,7 +61,9 @@ def add_temp_hunt(request, hunt_id):
             p.save()
 
             return HttpResponseRedirect(reverse("add_hunt_view",args=(p.id,)))
-
+def add_hint(request, hunt_id):
+    if request.method == "POST":
+        hint_texts = [request.POST.get('hint1'), request.POST.get('hint2'), request.POST.get('hint3')]
 
 def submit_puzzle(request, hunt_id):
     r = request.POST.get("radius")
