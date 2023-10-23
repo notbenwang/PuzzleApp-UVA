@@ -10,17 +10,17 @@
   <div class="container mx-3 my-3 text-center">
     <div class="container text-center bg-white shadow p-1 mb-2 mt-2 bg-white rounded py-3 w-50">
     <h3 class="text-dark">Add At Least 1 Hint!</h3>
-    <label for="hint1">Choice text: </label>
+    <label for="hint1">Hint 1: </label>
     <input type="text" name="hint1" required><br><br>
 
-    <label for="hint2">Choice text:</label>
+    <label for="hint2">Hint 2:</label>
     <input type="text" name="hint2" ><br><br>
 
-    <label for="hint3">Choice text:</label>
+    <label for="hint3">Hint 3:</label>
     <input type="text" name="hint3" ><br><br>
 
 
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" href="{% url 'add_hint' puzzle.id %}" class="btn btn-primary">Submit</button>
     </div>
 </div>
 {% endblock content %}

@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import generic
 from allauth.socialaccount.models import SocialAccount
-from .models import Puzzle, Hunt
+from .models import Puzzle, Hunt, Hint
 import json
 
 from .models import CustomUser
@@ -61,9 +61,16 @@ def add_temp_hunt(request, hunt_id):
             p.save()
 
             return HttpResponseRedirect(reverse("add_hunt_view",args=(p.id,)))
-def add_hint(request, hunt_id):
+def add_hint(request, puzzle_id):
+    p = Puzzle.objects.get(pk=puzzle_id)
     if request.method == "POST":
         hint_texts = [request.POST.get('hint1'), request.POST.get('hint2'), request.POST.get('hint3')]
+        for hint_text in hint_texts:
+            if hint_text:
+                hint = Hint(hint_string=hint_text, puzzle_id=puzzle_id)
+                hint.save()
+        return HttpResponseRedirect(reverse("detail_puzzle", args=(p.id)))
+    return HttpResponseRedirect("detail_puzzle", args=(p.id))
 
 def submit_puzzle(request, hunt_id):
     r = request.POST.get("radius")

@@ -15,6 +15,7 @@ urlpatterns = [
     path("<int:hunt_id>/submit_hunt", views.submit_hunt, name="submit_hunt"),
     path("<int:hunt_id>/hunt", views.view_hunt, name="view_hunt"),
     path("<int:pk>/add_hint", views.AddHintView.as_view(), name="add_hint_view"),
+    path("<int:puzzle_id>/add_hint", views.add_hint, name="add_hint"),
     # path('accounts/', include('allauth.urls')),
     # path('logout', LogoutView.as_view()),
     # path('accounts/google/login/', views.login, name='account_login'),
