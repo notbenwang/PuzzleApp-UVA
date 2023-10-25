@@ -18,9 +18,10 @@
 
     <label for="hint3">Hint 3:</label>
     <input type="text" name="hint3" ><br><br>
-
-
-    <button type="submit" href="{% url 'add_hint' puzzle.id %}" class="btn btn-primary">Submit</button>
-    </div>
+      puzzle={{puzzle_id}}
+    <form action="" method="post">
+    <button type="submit" href="{% url 'submit_hint' hunt.id 1 %}" class="btn btn-primary">Submit</button>
+    </form> 
+  </div>
 </div>
 {% endblock content %}
