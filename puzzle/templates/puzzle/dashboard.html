@@ -13,21 +13,43 @@ URL: https://stackoverflow.com/questions/65379988/django-how-to-pass-multiple-pa
 <head>
   <link rel="stylesheet" href="{% static 'puzzle/css/splash_screen.css' %}" />
 </head>
-<div class="container mx-3 my-3 text-center">
-    <h3 class="text-light">Published Puzzles</h3>
-    {% for hunt in hunts %}
-    <div class="container w-25">
-    <a href="{% url 'view_hunt' hunt_id=hunt.id %}" class="item-button">
-        <div class="container text-center bg-white shadow  rounded py-2 btn">
-            <h5 >{{ hunt.title }}</h5>
-            <i>{{ hunt.summary }}</i>
-        </div>
+<div class="container text-center">
+  <div class="row align-items-start">
+        <div class="col">
+            <h3 class="text-light">Published Puzzles</h3>
+            {% for hunt in hunts %}
+            <div class="container w-50">
+            <a href="{% url 'view_hunt' hunt_id=hunt.id %}" class="item-button">
+                <div class="container text-center bg-white shadow  rounded py-2 btn">
+                    <h5 >{{ hunt.title }}</h5>
+                    <i>{{ hunt.summary }}</i>
+                </div>
 
-    </a>
+            </a>
+                </div>
+            <p></p>
+            {% endfor %}
+            {{ puzzles }}
         </div>
-    <p></p>
-    {% endfor %}
-    {{ puzzles }}
+      {% if is_admin %}
+        <div class="col">
+            <h3 class="text-light">Admin Queue</h3>
+            {% for hunt in admin_queue %}
+            <div class="container w-50">
+            <a href="{% url 'view_hunt' hunt_id=hunt.id %}" class="item-button">
+                <div class="container text-center bg-white shadow  rounded py-2 btn">
+                    <p>OK</p>
+                    <h5 >{{ hunt.title }}</h5>
+                    <i>{{ hunt.summary }}</i>
+                </div>
+
+            </a>
+                </div>
+            <p></p>
+            {% endfor %}
+        </div>
+      {% endif %}
+    </div>
 </div>
 {% endblock %}
  

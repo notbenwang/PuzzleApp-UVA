@@ -100,8 +100,11 @@ def dashboard(request):
             is_admin = False
 
     hunts = Hunt.objects.filter(approved=True)
+    admin_queue = None
+    if is_admin:
+        admin_queue = Hunt.objects.filter(approved=False, submitted=True)
 
-    return render(request, "dashboard.html", {"is_admin": is_admin, "hunts": hunts})
+    return render(request, "dashboard.html", {"is_admin": is_admin, "hunts": hunts, "admin_queue": admin_queue})
 
 
 # Resource
