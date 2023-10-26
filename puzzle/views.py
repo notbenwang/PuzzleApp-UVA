@@ -113,6 +113,11 @@ def approve_hunt(request, hunt_id):
 
     return HttpResponseRedirect(reverse("dashboard"))
 
+def deny_hunt(request, hunt_id):
+    hunt = Hunt.objects.get(pk=hunt_id)
+    hunt.delete()
+
+    return HttpResponseRedirect(reverse("dashboard"))
 
 # Resource
 # URL: https://stackoverflow.com/questions/17813919/django-error-matching-query-does-not-exist

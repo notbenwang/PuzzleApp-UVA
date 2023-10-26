@@ -41,7 +41,7 @@ URL: https://stackoverflow.com/questions/65379988/django-how-to-pass-multiple-pa
                     <h5 >{{ hunt.title }}</h5>
                     <i>{{ hunt.summary }}</i>
                     <a href="{% url 'approve_hunt' hunt_id=hunt.id %}" class="btn btn-success mt-3" >Approve</a>
-                    <a href="/" class="btn btn-danger mt-3" >Deny</a>
+                    <a href="{% url 'deny_hunt' hunt_id=hunt.id %}" class="btn btn-danger mt-3" >Deny</a>
                 </div>
             </a>
                 </div>
