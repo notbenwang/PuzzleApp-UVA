@@ -24,7 +24,6 @@ URL: https://stackoverflow.com/questions/65379988/django-how-to-pass-multiple-pa
                     <h5 >{{ hunt.title }}</h5>
                     <i>{{ hunt.summary }}</i>
                 </div>
-
             </a>
                 </div>
             <p></p>
@@ -35,16 +34,18 @@ URL: https://stackoverflow.com/questions/65379988/django-how-to-pass-multiple-pa
         <div class="col">
             <h3 class="text-light">Admin Queue</h3>
             {% for hunt in admin_queue %}
+            {% if hunt.title and hunt.summary %}
             <div class="container w-50">
             <a href="{% url 'view_hunt' hunt_id=hunt.id %}" class="item-button">
                 <div class="container text-center bg-white shadow  rounded py-2 btn">
-                    <p>OK</p>
                     <h5 >{{ hunt.title }}</h5>
                     <i>{{ hunt.summary }}</i>
+                    <a href="{% url 'approve_hunt' hunt_id=hunt.id %}" class="btn btn-success mt-3" >Approve</a>
+                    <a href="/" class="btn btn-danger mt-3" >Deny</a>
                 </div>
-
             </a>
                 </div>
+            {% endif %}
             <p></p>
             {% endfor %}
         </div>

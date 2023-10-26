@@ -106,6 +106,13 @@ def dashboard(request):
 
     return render(request, "dashboard.html", {"is_admin": is_admin, "hunts": hunts, "admin_queue": admin_queue})
 
+def approve_hunt(request, hunt_id):
+    hunt = Hunt.objects.get(pk=hunt_id)
+    hunt.approved = True
+    hunt.save()
+
+    return HttpResponseRedirect(reverse("dashboard"))
+
 
 # Resource
 # URL: https://stackoverflow.com/questions/17813919/django-error-matching-query-does-not-exist
