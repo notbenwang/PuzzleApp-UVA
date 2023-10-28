@@ -14,7 +14,7 @@
   <div class="container text-center bg-white shadow  bg-white rounded py-3 w-50">
     <h3>{{ hunt.title }}</h3>
     <p>{{ hunt.summary}}</p>
-    <a class="btn btn-success">Play</a>
+    <a class="btn btn-success" href="{% url 'play_hunt' hunt.id %}">Play</a>
     <a class="btn btn-danger" href="{% url 'dashboard' %}">Go Back</a>
   </div>
 </div>

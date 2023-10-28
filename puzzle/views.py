@@ -68,7 +68,9 @@ def submit_puzzle(request, hunt_id):
 
     h = Hunt.objects.get(pk=hunt_id)
     # Should change "test" to some Post object
-    p = Puzzle(prompt_text="test",hunt_id=h, radius=r,long=float(arr[1]), lat=float(arr[0]))
+    size = len(Puzzle.objects.filter(hunt_id=hunt_id))
+    
+    p = Puzzle(prompt_text="test",hunt_id=h, radius=r,long=float(arr[1]), lat=float(arr[0]), order=size)
     p.save()
     return HttpResponseRedirect(reverse("add_temp_hunt", args=(h.id,)))
 
@@ -102,6 +104,13 @@ def dashboard(request):
     hunts = Hunt.objects.filter(approved=True)
 
     return render(request, "dashboard.html", {"is_admin": is_admin, "hunts": hunts})
+
+def play_hunt(request, hunt_id):
+    return HttpResponseRedirect(reverse("play_puzzle", args=(hunt_id, 0)))
+
+def play_puzzle(request, hunt_id, order):
+    p_set = Puzzle.objects.filter(hunt_id = hunt_id)
+    return render(request, "play_puzzle.html")
 
 
 # Resource

@@ -17,6 +17,7 @@ class Puzzle(models.Model):
     long = models.FloatField(default = 0) 
     lat = models.FloatField(default = 0)
     radius = models.IntegerField(default = 10)
+    order = models.IntegerField(default = -1)
 
 class Hint(models.Model):
     hint_string = models.CharField(max_length=500)
