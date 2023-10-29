@@ -143,9 +143,17 @@ def get_puzzle_result(request, hunt_id, order):
     miles = distance / 5280
     return render(request, "play_puzzle_result.html", {"distance":round(distance, 4), "miles":round(miles, 4), 
                                                        "hunt_id" : hunt_id, "order" : order,
-                                                       "lat": lat, "lng": lng, "guess_lat":guess_lat, "guess_lng":guess_lng})
+                                                       "lat": lat, "lng": lng, "guess_lat":guess_lat, "guess_lng":guess_lng, "radius":radius})
 
+def go_next_puzzle(request, hunt_id, order):
+    hunt = Hunt.objects.get(pk=hunt_id)
+    order += 1
+    puzzles = Puzzle.objects.filter(order=order, hunt_id=hunt)
 
+    if (order <= len(puzzles)):   
+        return HttpResponseRedirect(reverse("play_puzzle", kwargs={"hunt_id" : hunt_id, "order" : order, "hint_amount": 0}))
+    else:
+        return render(request, "hunt_results.html")
 
 # Resource
 # URL: https://stackoverflow.com/questions/17813919/django-error-matching-query-does-not-exist

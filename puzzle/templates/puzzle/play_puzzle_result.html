@@ -1,6 +1,8 @@
 <p>Distance: {{distance}} feet or {{miles}} miles</p>
+<p>Radius: {{radius}}</p>
+<p>Score: PLACEHOLDER</p>
 <div id="map" style="height: 50%"></div>
-
+<a href="{% url 'get_next_puzzle' hunt_id order %}">Go Next Puzzle</a>
 <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4zAcfYsYZqZKz4I1OikA8pqWxFkEk5oM&callback=initMap">
 </script>
@@ -12,7 +14,8 @@
             puzzle_lat = Number("{{lat}}");
             puzzle_lng = Number("{{lng}}");
             guess_lat = Number("{{guess_lat}}");
-            guess_lng = Number("{{guess_lng}}")
+            guess_lng = Number("{{guess_lng}}");
+            radius = Number("{{radius}}");
             const myLatlng = {lat: puzzle_lat, lng: puzzle_lng};
             const myLatlng2 = {lat: guess_lat, lng: guess_lng};
             const pathCoordinates = [myLatlng, myLatlng2]
@@ -24,16 +27,16 @@
                 mapTypeId: google.maps.MapTypeId.ROADMAP
             });
             // Add marker
-            marker = new google.maps.Marker({
+            marker1 = new google.maps.Marker({
                 position: myLatlng,
                 map: map,
             })
-            markers.push(marker);
-            marker = new google.maps.Marker({
+
+            marker2 = new google.maps.Marker({
                 position: myLatlng2,
                 map: map,
             })
-            markers.push(marker);
+
             
             const path = new google.maps.Polyline({
                 path: pathCoordinates,
@@ -42,7 +45,16 @@
                 strokeOpacity : 0.5,
                 strokeWeight : 2,
             });
-
+            circle = new google.maps.Circle({
+                strokeColor: "#FF0000",
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: "#FF0000",
+                fillOpacity: 0.35,
+                map,
+                center: myLatlng,
+                radius: radius
+            })
             path.setMap(map);
             
         }
