@@ -15,7 +15,9 @@ urlpatterns = [
     path("<int:hunt_id>/submit_hunt", views.submit_hunt, name="submit_hunt"),
     path("<int:hunt_id>/hunt", views.view_hunt, name="view_hunt"),
     path("<int:hunt_id>/play_hunt", views.play_hunt, name="play_hunt"),
-    path("<int:hunt_id>/play/<int:order>", views.play_puzzle, name="play_puzzle")
+    path("<int:hunt_id>/play/<int:order>/<int:hint_amount>", views.play_puzzle, name="play_puzzle"),
+    path("<int:hunt_id>/play/<int:order>/<int:hint_amount>/request_hint", views.request_hint, name="request_hint"),
+    path("<int:hunt_id>/play/<int:order>/results", views.get_puzzle_result, name="get_puzzle_result")
     
     # path('accounts/', include('allauth.urls')),
     # path('logout', LogoutView.as_view()),

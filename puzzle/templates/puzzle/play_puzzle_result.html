@@ -1,0 +1,49 @@
+<p>Distance: {{distance}} feet or {{miles}} miles</p>
+<div id="map" style="height: 50%"></div>
+
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4zAcfYsYZqZKz4I1OikA8pqWxFkEk5oM&callback=initMap">
+</script>
+<script>
+    let map;
+    let markers = [];
+
+    function initMap() {
+            puzzle_lat = Number("{{lat}}");
+            puzzle_lng = Number("{{lng}}");
+            guess_lat = Number("{{guess_lat}}");
+            guess_lng = Number("{{guess_lng}}")
+            const myLatlng = {lat: puzzle_lat, lng: puzzle_lng};
+            const myLatlng2 = {lat: guess_lat, lng: guess_lng};
+            const pathCoordinates = [myLatlng, myLatlng2]
+            // Add map
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: myLatlng2,
+                zoom: 17, 
+                streetViewControl: false,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            });
+            // Add marker
+            marker = new google.maps.Marker({
+                position: myLatlng,
+                map: map,
+            })
+            markers.push(marker);
+            marker = new google.maps.Marker({
+                position: myLatlng2,
+                map: map,
+            })
+            markers.push(marker);
+            
+            const path = new google.maps.Polyline({
+                path: pathCoordinates,
+                gedesic: true,
+                strokeColor : "#FF0000",
+                strokeOpacity : 0.5,
+                strokeWeight : 2,
+            });
+
+            path.setMap(map);
+            
+        }
+</script>

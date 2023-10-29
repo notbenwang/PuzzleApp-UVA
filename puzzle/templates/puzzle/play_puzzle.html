@@ -1,6 +1,20 @@
-<h1>Google Maps</h1>
+<h1>Play</h1>
+<p>YOUR CLUE: {{prompt.hint_string}}</p>
+
+{% for puzzle in puzzles %}
+    {% for hint in hints %}
+        <p>Hint: {{hint.hint_string}}</p>
+    {% endfor %}
+{% endfor %}
 <div id="map" style="height: 50%"></div>
-<input type="hidden" id="latLng" name="latLng">
+
+<form action ="{% url 'get_puzzle_result' hunt.id order %}" method = "post">
+    {% csrf_token %}
+    <input type="hidden" id="latLng" name="latLng">
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+<p>Amount of hints used: {{hint_amount}}</p>
+<a href="{% url 'request_hint' hunt.id order hint_amount %}">Request Hint</a>
 <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4zAcfYsYZqZKz4I1OikA8pqWxFkEk5oM&callback=initMap">
 </script>
