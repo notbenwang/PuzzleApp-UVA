@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import generic
 from allauth.socialaccount.models import SocialAccount
-from .models import Puzzle, Hunt, Hint
+from .models import Puzzle, Hunt, Hint, Session
 import math
 
 from .models import CustomUser
@@ -30,6 +30,7 @@ def create_custom_user(request):
             custom_user = CustomUser(social_id=social_id, is_admin=False)
             custom_user.save()
             is_admin = False
+    return custom_user
 
 def index(request):
     return HttpResponse("You are at the puzzle index")
@@ -105,29 +106,65 @@ def dashboard(request):
 
     return render(request, "dashboard.html", {"is_admin": is_admin, "hunts": hunts})
 
-def play_hunt(request, hunt_id):
-    return HttpResponseRedirect(reverse("play_puzzle", kwargs={"hunt_id" : hunt_id, "order" : 0, "hint_amount" : 0}))
-
-def play_puzzle(request, hunt_id, order, hint_amount):
+def get_session(request, hunt_id):
+    user = create_custom_user(request)
     h = Hunt.objects.get(pk=hunt_id)
+    try:
+        session = Session.objects.get(player=user, hunt_id = h)
+    except Session.DoesNotExist:
+        session = Session(player=user, hunt=h)
+        session.save()
+    return session
+
+def play_hunt(request, hunt_id):
+    session = get_session(request, hunt_id)
+    if session.completed:
+        return render(request, "hunt_results.html")
+    # elif session.finished_puzzle:
+    #     return 
+    # Will add something here that if in results, should resume at the results
+    else:
+        return HttpResponseRedirect(reverse("play_puzzle", kwargs={"hunt_id":hunt_id, "session_id" : session.id}))
+
+def play_puzzle(request, hunt_id, session_id):
+    session = Session.objects.get(pk=session_id)
+    h = Hunt.objects.get(pk=hunt_id)
+    order = session.current_puzzle
+    hint_amount = session.current_hints_used
     p = Puzzle.objects.filter(order = order, hunt_id = h)
     hints = Hint.objects.filter(puzzle_id = p.first())
     return render(request, "play_puzzle.html", {"puzzles": p, 
                                                 "prompt":hints.first, 
                                                 "hints":hints[1:hint_amount+1], 
                                                 "hint_amount":hint_amount, 
-                                                "order":order, "hunt":h})
+                                                "order":order, "hunt":h,
+                                                "session_id":session.id })
 
-def request_hint(request, hunt_id, order, hint_amount):
+def request_hint(request, hunt_id, session_id):
+    session = Session.objects.get(pk=session_id)
     h = Hunt.objects.get(pk=hunt_id)
+    order = session.current_puzzle
+    hint_amount = session.current_hints_used
     p = Puzzle.objects.filter(order = order, hunt_id = h)
     hints = Hint.objects.filter(puzzle_id = p.first())
     if hint_amount+1 < len(hints):
-        hint_amount+=1
-    return HttpResponseRedirect(reverse("play_puzzle", kwargs={"hunt_id" : hunt_id, "order" : order, "hint_amount": hint_amount}))
+        session.current_hints_used += 1
+        session.total_hints_used += 1
+        session.save()
+    return HttpResponseRedirect(reverse("play_puzzle", kwargs={"hunt_id":hunt_id, "session_id" : session.id}))
 
-def get_puzzle_result(request, hunt_id, order):
+def get_puzzle_result(request, hunt_id, session_id):
+    session = Session.objects.get(pk=session_id)
+    order = session.current_puzzle
+    hint_amount = session.current_hints_used
+    
     hunt = Hunt.objects.get(pk=hunt_id)
+    puzzles = Puzzle.objects.filter(order=order, hunt_id=hunt)
+    
+    if (order+1 <= len(puzzles)):
+        session.current_puzzle += 1
+        session.save()
+    
     puzzle = Puzzle.objects.filter(order = order, hunt_id = hunt).first()
     latLng = request.POST.get("latLng")
     arr = latLng[1:-1].split(", ")
@@ -143,16 +180,23 @@ def get_puzzle_result(request, hunt_id, order):
     miles = distance / 5280
     return render(request, "play_puzzle_result.html", {"distance":round(distance, 4), "miles":round(miles, 4), 
                                                        "hunt_id" : hunt_id, "order" : order,
-                                                       "lat": lat, "lng": lng, "guess_lat":guess_lat, "guess_lng":guess_lng, "radius":radius})
+                                                       "lat": lat, "lng": lng, "guess_lat":guess_lat, "guess_lng":guess_lng, "radius":radius,
+                                                       "session_id" : session_id})
 
-def go_next_puzzle(request, hunt_id, order):
+def go_next_puzzle(request, hunt_id, session_id):
     hunt = Hunt.objects.get(pk=hunt_id)
-    order += 1
+    session = Session.objects.get(pk=session_id)
+    order = session.current_puzzle
     puzzles = Puzzle.objects.filter(order=order, hunt_id=hunt)
 
-    if (order <= len(puzzles)):   
-        return HttpResponseRedirect(reverse("play_puzzle", kwargs={"hunt_id" : hunt_id, "order" : order, "hint_amount": 0}))
+    if (order < len(puzzles)):
+        # session.current_puzzle += 1
+        session.current_hints_used = 0
+        session.save()   
+        return HttpResponseRedirect(reverse("play_puzzle", kwargs={"hunt_id":hunt_id, "session_id" : session.id}))
     else:
+        session.completed = True
+        session.save()
         return render(request, "hunt_results.html")
 
 # Resource

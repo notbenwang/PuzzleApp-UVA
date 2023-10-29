@@ -8,13 +8,13 @@
 {% endfor %}
 <div id="map" style="height: 50%"></div>
 
-<form action ="{% url 'get_puzzle_result' hunt.id order %}" method = "post">
+<form action ="{% url 'get_puzzle_result' hunt.id session_id %}" method = "post">
     {% csrf_token %}
     <input type="hidden" id="latLng" name="latLng">
     <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 <p>Amount of hints used: {{hint_amount}}</p>
-<a href="{% url 'request_hint' hunt.id order hint_amount %}">Request Hint</a>
+<a href="{% url 'request_hint' hunt.id session_id %}">Request Hint</a>
 <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4zAcfYsYZqZKz4I1OikA8pqWxFkEk5oM&callback=initMap">
 </script>

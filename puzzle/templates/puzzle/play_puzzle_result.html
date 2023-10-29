@@ -2,7 +2,7 @@
 <p>Radius: {{radius}}</p>
 <p>Score: PLACEHOLDER</p>
 <div id="map" style="height: 50%"></div>
-<a href="{% url 'get_next_puzzle' hunt_id order %}">Go Next Puzzle</a>
+<a href="{% url 'get_next_puzzle' hunt_id session_id %}">Go Next Puzzle</a>
 <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4zAcfYsYZqZKz4I1OikA8pqWxFkEk5oM&callback=initMap">
 </script>
