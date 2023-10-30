@@ -18,7 +18,7 @@ URL: https://stackoverflow.com/questions/65379988/django-how-to-pass-multiple-pa
         <div class="col">
             <h3 class="text-light">Published Puzzles</h3>
             {% for hunt, author in zipped_hunts %}
-            <div class="container-large mt-2">
+            <div class="container-large mt-2" style="max-width: 500px; margin: auto;">
                 <a href="{% url 'view_hunt' hunt_id=hunt.id %}" class="item-button">
                     <div class="container text-center bg-white shadow  rounded py-2 btn">
                         <h5>{{ hunt.title }}</h5>
@@ -49,9 +49,8 @@ URL: https://stackoverflow.com/questions/65379988/django-how-to-pass-multiple-pa
                         <a href="{% url 'approve_hunt' hunt_id=hunt.id %}" class="btn btn-success mt-3" >Approve</a>
                         <a href="{% url 'deny_hunt' hunt_id=hunt.id %}" class="btn btn-danger mt-3" >Deny</a>
                     </div>
-<!--                </div>-->
                 </div>
-                            </a>
+            </a>
 
             {% endif %}
             {% endfor %}
