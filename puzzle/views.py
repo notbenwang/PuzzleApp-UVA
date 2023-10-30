@@ -20,8 +20,12 @@ class DetailPuzzleView(generic.DetailView):
     model = Puzzle
     template_name = "detail_puzzle.html"
 class AddHintView(generic.DetailView):
-    model = Hunt 
+    model = Hunt
     template_name = "add_hint.html"
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['context_id'] = self.kwargs['puzzle_id']
+        return data
 def create_custom_user(request):
     social_id = request.user.id
 
@@ -70,7 +74,7 @@ def submit_hint(request, hunt_id, puzzle_id):
                 hint = Hint(hint_string=hint_text, puzzle_id=puzzle_id)
                 hint.save()
         return HttpResponseRedirect(reverse("detail_puzzle", args=(hunt_id,puzzle_id)))
-    return HttpResponseRedirect("detail_puzzle", args=(hunt_id,puzzle_id))
+    return HttpResponseRedirect(reverse("detail_puzzle", args=(hunt_id,puzzle_id)))
 
 def submit_puzzle(request, hunt_id):
     r = request.POST.get("radius")

@@ -10,7 +10,9 @@
   <div class="container mx-3 my-3 text-center">
     <div class="container text-center bg-white shadow p-1 mb-2 mt-2 bg-white rounded py-3 w-50">
     <h3 class="text-dark">Add At Least 1 Hint!</h3>
-    <label for="hint1">Hint 1: </label>
+      
+    <form action="{% url 'submit_hint' hunt.id 1 %}" method="post">
+      <label for="hint1">Hint 1: </label>
     <input type="text" name="hint1" required><br><br>
 
     <label for="hint2">Hint 2:</label>
@@ -18,9 +20,8 @@
 
     <label for="hint3">Hint 3:</label>
     <input type="text" name="hint3" ><br><br>
-      puzzle={{puzzle_id}}
-    <form action="" method="post">
-    <button type="submit" href="{% url 'submit_hint' hunt.id 1 %}" class="btn btn-primary">Submit</button>
+      <p>puzzle={{puzzle_id}}</p>
+      <button type="submit"  class="btn btn-primary">Submit</button>
     </form> 
   </div>
 </div>
