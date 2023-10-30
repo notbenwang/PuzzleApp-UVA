@@ -14,7 +14,8 @@ urlpatterns = [
     path("<int:pk>/puzzle/<int:puzzle_id>", views.DetailPuzzleView.as_view(), name="detail_puzzle"),
     path("<int:hunt_id>/submit_hunt", views.submit_hunt, name="submit_hunt"),
     path("<int:hunt_id>/hunt", views.view_hunt, name="view_hunt"),
-    
+    path("<int:hunt_id>/approve/hunt", views.approve_hunt, name="approve_hunt"),
+    path("<int:hunt_id>/deny/hunt", views.deny_hunt, name="deny_hunt"),
     # path('accounts/', include('allauth.urls')),
     # path('logout', LogoutView.as_view()),
     # path('accounts/google/login/', views.login, name='account_login'),
