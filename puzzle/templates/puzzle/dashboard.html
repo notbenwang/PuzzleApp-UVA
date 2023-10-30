@@ -18,38 +18,41 @@ URL: https://stackoverflow.com/questions/65379988/django-how-to-pass-multiple-pa
         <div class="col">
             <h3 class="text-light">Published Puzzles</h3>
             {% for hunt, author in zipped_hunts %}
-            <div class="container-large">
-            <a href="{% url 'view_hunt' hunt_id=hunt.id %}" class="item-button">
-                <div class="container text-center bg-white shadow  rounded py-2 btn">
-                    <h5>{{ hunt.title }}</h5>
-                    <i>{{ hunt.summary }}</i>
-                    <br/>
-                    <span>By {{ author }}</span>
-                </div>
-            </a>
-                </div>
-            <p></p>
+            <div class="container-large mt-2">
+                <a href="{% url 'view_hunt' hunt_id=hunt.id %}" class="item-button">
+                    <div class="container text-center bg-white shadow  rounded py-2 btn">
+                        <h5>{{ hunt.title }}</h5>
+                        <i>{{ hunt.summary }}</i>
+                        <br/>
+                        <span>By {{ author }}</span>
+                    </div>
+                </a>
+            </div>
             {% endfor %}
             {{ puzzles }}
         </div>
       {% if is_admin %}
           <div class="w-100 d-xs-block d-sm-block d-md-none"></div>
         <div class="col">
-            <h3 class="text-light">Admin Queue</h3>
+            <h3 class="text-light mb-0">Admin Queue</h3>
             {% for hunt, author in zipped_admin %}
             {% if hunt.title and hunt.summary %}
-            <div class="container large">
-            <a href="{% url 'view_hunt' hunt_id=hunt.id %}" class="item-button">
-                <div class="container text-center bg-white shadow  rounded py-2 btn">
-                    <h5 >{{ hunt.title }}</h5>
+<!--            <div class="container-large">-->
+            <a href="{% url 'view_hunt' hunt_id=hunt.id %}" class="btn">
+                <div class="container text-center bg-white shadow rounded py-2">
+                    <h5>{{ hunt.title }}</h5>
                     <i>{{ hunt.summary }}</i>
-                    <a href="{% url 'approve_hunt' hunt_id=hunt.id %}" class="btn btn-success mt-3" >Approve</a>
-                    <a href="{% url 'deny_hunt' hunt_id=hunt.id %}" class="btn btn-danger mt-3" >Deny</a>
-                </div>
+                    <br/>
+                    <span>By {{ author }}</span>
+                    <br />
+                    <div>
+                        <a href="{% url 'approve_hunt' hunt_id=hunt.id %}" class="btn btn-success mt-3" >Approve</a>
+                        <a href="{% url 'deny_hunt' hunt_id=hunt.id %}" class="btn btn-danger mt-3" >Deny</a>
+                    </div>
+<!--                </div>-->
             </a>
                 </div>
             {% endif %}
-            <p></p>
             {% endfor %}
         </div>
       {% endif %}

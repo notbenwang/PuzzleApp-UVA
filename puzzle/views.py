@@ -147,3 +147,10 @@ def deny_hunt(request, hunt_id):
 # Name: CodeTherapy
 # Date: Oct 31 2021
 # Used to figure out how to get latest obejct by pk
+
+#Resource
+# URL: https://stackoverflow.com/questions/2415865/iterating-through-two-lists-in-django-templates
+# Name: Mermoz
+# Date: Nov 21 2010
+# Used to learn to zip lists to deliver mappings to view
+
