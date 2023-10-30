@@ -36,7 +36,7 @@ URL: https://stackoverflow.com/questions/65379988/django-how-to-pass-multiple-pa
           <div class="w-100 d-xs-block d-sm-block d-md-none"></div>
         <div class="col">
             <h3 class="text-light">Admin Queue</h3>
-            {% for hunt in admin_queue %}
+            {% for hunt, author in zipped_admin %}
             {% if hunt.title and hunt.summary %}
             <div class="container large">
             <a href="{% url 'view_hunt' hunt_id=hunt.id %}" class="item-button">

@@ -104,17 +104,24 @@ def dashboard(request):
 
     def get_user(custom_user):
         try:
-            return SocialAccount.objects.get(pk=custom_user.social_id)
+            if custom_user:
+                return SocialAccount.objects.get(pk=custom_user.social_id)
+            else:
+                return None
         except SocialAccount.DoesNotExist:
             return None
 
     authors = list(map(get_user, authors))
     zipped_hunts = zip(hunts, authors)
-    admin_queue = None
+    zipped_admin = None
+
     if is_admin:
         admin_queue = Hunt.objects.filter(approved=False, submitted=True)
+        admin_authors = list(map(lambda x: x.creator, admin_queue))
+        admin_authors = list(map(get_user, admin_authors))
+        zipped_admin = zip(admin_queue, admin_authors)
 
-    return render(request, "dashboard.html", {"is_admin": is_admin, "zipped_hunts": zipped_hunts, "admin_queue": admin_queue})
+    return render(request, "dashboard.html", {"is_admin": is_admin, "zipped_hunts": zipped_hunts, "zipped_admin": zipped_admin})
 
 def approve_hunt(request, hunt_id):
     hunt = Hunt.objects.get(pk=hunt_id)
