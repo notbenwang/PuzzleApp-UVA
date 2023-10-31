@@ -190,11 +190,9 @@ def go_next_puzzle(request, hunt_id, session_id):
 
     if (order < len(puzzles)):
         # session.current_puzzle += 1
-          
         return HttpResponseRedirect(reverse("play_puzzle", kwargs={"hunt_id":hunt_id, "session_id" : session.id}))
     else:
         session.completed = True
-        session.save()
         return render(request, "hunt_results.html")
 
 # Resource
