@@ -160,10 +160,9 @@ def get_puzzle_result(request, hunt_id, session_id):
     
     hunt = Hunt.objects.get(pk=hunt_id)
     puzzles = Puzzle.objects.filter(order=order, hunt_id=hunt)
-    
-    if (order+1 <= len(puzzles)):
-        session.current_puzzle += 1
-        session.save()
+    session.current_hints_used = 0
+    session.current_puzzle += 1
+    session.save()
     
     puzzle = Puzzle.objects.filter(order = order, hunt_id = hunt).first()
     latLng = request.POST.get("latLng")
@@ -187,12 +186,11 @@ def go_next_puzzle(request, hunt_id, session_id):
     hunt = Hunt.objects.get(pk=hunt_id)
     session = Session.objects.get(pk=session_id)
     order = session.current_puzzle
-    puzzles = Puzzle.objects.filter(order=order, hunt_id=hunt)
+    puzzles = Puzzle.objects.filter(hunt_id=hunt)
 
     if (order < len(puzzles)):
         # session.current_puzzle += 1
-        session.current_hints_used = 0
-        session.save()   
+          
         return HttpResponseRedirect(reverse("play_puzzle", kwargs={"hunt_id":hunt_id, "session_id" : session.id}))
     else:
         session.completed = True
