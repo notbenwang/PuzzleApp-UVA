@@ -103,8 +103,41 @@ def dashboard(request):
             is_admin = False
 
     hunts = Hunt.objects.filter(approved=True)
+    authors = list(map(lambda x: x.creator, hunts))
 
-    return render(request, "dashboard.html", {"is_admin": is_admin, "hunts": hunts})
+    def get_user(custom_user):
+        try:
+            if custom_user:
+                return SocialAccount.objects.get(pk=custom_user.social_id)
+            else:
+                return None
+        except SocialAccount.DoesNotExist:
+            return None
+
+    authors = list(map(get_user, authors))
+    zipped_hunts = zip(hunts, authors)
+    zipped_admin = None
+
+    if is_admin:
+        admin_queue = Hunt.objects.filter(approved=False, submitted=True)
+        admin_authors = list(map(lambda x: x.creator, admin_queue))
+        admin_authors = list(map(get_user, admin_authors))
+        zipped_admin = zip(admin_queue, admin_authors)
+        
+    return render(request, "dashboard.html", {"is_admin": is_admin, "zipped_hunts": zipped_hunts, "zipped_admin": zipped_admin})
+
+def approve_hunt(request, hunt_id):
+    hunt = Hunt.objects.get(pk=hunt_id)
+    hunt.approved = True
+    hunt.save()
+
+    return HttpResponseRedirect(reverse("dashboard"))
+
+def deny_hunt(request, hunt_id):
+    hunt = Hunt.objects.get(pk=hunt_id)
+    hunt.delete()
+
+    return HttpResponseRedirect(reverse("dashboard"))
 
 def get_session(request, hunt_id):
     user = create_custom_user(request)
@@ -206,3 +239,10 @@ def go_next_puzzle(request, hunt_id, session_id):
 # Name: CodeTherapy
 # Date: Oct 31 2021
 # Used to figure out how to get latest obejct by pk
+
+#Resource
+# URL: https://stackoverflow.com/questions/2415865/iterating-through-two-lists-in-django-templates
+# Name: Mermoz
+# Date: Nov 21 2010
+# Used to learn to zip lists to deliver mappings to view
+
