@@ -226,6 +226,7 @@ def go_next_puzzle(request, hunt_id, session_id):
         return HttpResponseRedirect(reverse("play_puzzle", kwargs={"hunt_id":hunt_id, "session_id" : session.id}))
     else:
         session.completed = True
+        session.save()
         return render(request, "hunt_results.html")
 
 # Resource
