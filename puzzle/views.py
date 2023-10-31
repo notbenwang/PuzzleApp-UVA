@@ -192,7 +192,7 @@ def get_puzzle_result(request, hunt_id, session_id):
     hint_amount = session.current_hints_used
     
     hunt = Hunt.objects.get(pk=hunt_id)
-    puzzles = Puzzle.objects.filter(order=order, hunt_id=hunt)
+
     session.current_hints_used = 0
     session.current_puzzle += 1
     session.save()
@@ -205,11 +205,17 @@ def get_puzzle_result(request, hunt_id, session_id):
     lat = puzzle.lat
     lng = puzzle.long
     radius = puzzle.radius
-
+    radius_feet = radius * 4.07585 # Magic number
+     
     diff_lat = guess_lat - lat
     diff_lng = guess_lng - lng
-    distance = math.sqrt(pow(diff_lat,2) + pow(diff_lng,2)) * 364000 
+    distance = math.sqrt(pow(diff_lat,2) + pow(diff_lng,2)) * 364000 # Magic numbers
+    if distance < radius_feet:
+        distance = 0
+    else:
+        distance -= radius_feet
     miles = distance / 5280
+
     return render(request, "play_puzzle_result.html", {"distance":round(distance, 4), "miles":round(miles, 4), 
                                                        "hunt_id" : hunt_id, "order" : order,
                                                        "lat": lat, "lng": lng, "guess_lat":guess_lat, "guess_lng":guess_lng, "radius":radius,
