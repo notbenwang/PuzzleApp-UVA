@@ -89,7 +89,11 @@ def submit_puzzle(request, hunt_id):
 
 def submit_hunt(request, hunt_id):
     h = Hunt.objects.get(pk=hunt_id)
+    title = request.POST.get("title")
+    summary = request.POST.get("summary")
     h.submitted = True
+    h.title = title
+    h.summary = summary
     h.save()
     return HttpResponseRedirect(reverse("dashboard"))
 
