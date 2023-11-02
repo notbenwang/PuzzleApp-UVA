@@ -7,6 +7,7 @@
 
 {% block content %}
 <!--{% if is_admin %}-->
+<!--suppress XmlDuplicatedId -->
 <head>
   <link rel="stylesheet" href="{% static 'puzzle/css/splash_screen.css' %}" />
 </head>
@@ -14,30 +15,32 @@
     <div class="container text-center">
         <h3 class="text-light">Administrative Settings</h3>
         <div class="container text-center bg-white shadow rounded py-2 w-50">
-            <strong>Add and Remove Administrators</strong>
-            <table class="container-fluid">
-                <tr>
-                    <th>User</th>
-                    <th>Admin Status</th>
-                </tr>
-                  {% for user, social_user in user_zip %}
-                <tr>
-                    <td>{{social_user.email}}</td>
-                    <td>
-                        {% if user.is_admin %}
-                        <input checked class="form-check-input" id="flexCheckDefault"
-                               type="checkbox" value="">
-                        {% else %}
-                        <input class="form-check-input" id="flexCheckDefault1"
-                               type="checkbox" value="">
-                        {% endif %}
-                    </td>
-                </tr>
-                  {% endfor %}
-                </table>
-            <button>Save</button>
-            <button>Go Back</button>
-
+             <form action="" method="post">
+                 {% csrf_token %}
+                <strong>Add and Remove Administrators</strong>
+                <table class="container-fluid">
+                    <tr>
+                        <th>User</th>
+                        <th>Admin Status</th>
+                    </tr>
+                      {% for user, social_user in user_zip %}
+                    <tr>
+                        <td>{{social_user.email}}</td>
+                        <td>
+                            {% if user.is_admin %}
+                            <input checked class="form-check-input" id="admin_{{user.id}}"
+                                   type="checkbox" value="">
+                            {% else %}
+                            <input class="form-check-input" id="admin_{{user.id}}"
+                                   type="checkbox" value="">
+                            {% endif %}
+                        </td>
+                    </tr>
+                      {% endfor %}
+                    </table>
+                <button class="btn btn-success">Save</button>
+                <button class="btn btn-danger">Go Back</button>
+             </form>
         </div>
     </div>
 </body>
