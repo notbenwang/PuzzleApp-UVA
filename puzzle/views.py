@@ -277,7 +277,7 @@ def admin_view(request):
 
     social_users = list(map(get_social_user, users))
     user_zip = zip(users, social_users)
-    user_zip = list(filter(lambda x: x[1], user_zip))
+    user_zip = list(filter(lambda x: x[1] and x[1].email, user_zip))
 
     return render(request, "admin.html", {"is_admin": is_admin, "user_zip": user_zip})
 
