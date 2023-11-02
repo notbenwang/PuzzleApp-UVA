@@ -6,7 +6,7 @@
 {% bootstrap_javascript %}
 
 {% block content %}
-<!--{% if is_admin %}-->
+{% if is_admin %}
 <!--suppress XmlDuplicatedId -->
 <head>
   <link rel="stylesheet" href="{% static 'puzzle/css/splash_screen.css' %}" />
@@ -39,11 +39,11 @@
                       {% endfor %}
                     </table>
                 <button class="btn btn-success">Save</button>
-                <button class="btn btn-danger">Go Back</button>
+                 <a href="{% url 'dashboard' %}" class="btn btn-danger">Go Back</a>
              </form>
         </div>
     </div>
 </body>
-<!--{% endif %}-->
+{% endif %}
 {% endblock %}
 
