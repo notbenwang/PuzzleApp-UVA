@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load socialaccount %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block content %}
+{% if is_admin %}
+<!--suppress XmlDuplicatedId -->
+<head>
+  <link rel="stylesheet" href="{% static 'puzzle/css/splash_screen.css' %}" />
+</head>
+<body>
+    <div class="container text-center">
+        <h3 class="text-light">Administrative Settings</h3>
+        <div class="container text-center bg-white shadow rounded py-2 w-50">
+             <form action="{% url 'set_admin' %}" method="post">
+                 {% csrf_token %}
+                <strong>Add and Remove Administrators</strong>
+                <table class="container-fluid">
+                    <tr>
+                        <th>User</th>
+                        <th>Admin Status</th>
+                    </tr>
+                      {% for user, social_user in user_zip %}
+                    <tr>
+                        <td>{{social_user.email}}</td>
+                        <td>
+                            {% if user.is_admin %}
+                            <input checked class="form-check-input" id="admin_{{user.id}}" name="admin_{{user.id}}"
+                                   type="checkbox" value="">
+                            {% else %}
+                            <input class="form-check-input" id="admin_{{user.id}}" name="admin_{{user.id}}"
+                                   type="checkbox" value="">
+                            {% endif %}
+                        </td>
+                    </tr>
+                      {% endfor %}
+                    </table>
+                <button class="btn btn-success">Save</button>
+                 <a href="{% url 'dashboard' %}" class="btn btn-danger">Go Back</a>
+             </form>
+        </div>
+    </div>
+</body>
+{% endif %}
+{% endblock %}
+
