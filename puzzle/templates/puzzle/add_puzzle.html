@@ -24,7 +24,18 @@
       <div class="container text-center bg-white shadow p-1 mb-2 mt-2 bg-white rounded py-3 w-75">
               <h3>Add A Puzzle</h3>
     <!-- MAP OBJECT -->
-    <div id="map" style="height: 50%"></div>
+    
+    <form action="{% url 'submit_puzzle' hunt.id %}" method="post">
+        {% csrf_token %}
+        <div class="text-center">
+            <p>
+                <label>Prompt:</label>
+                <input type="text" class="prompt" name="prompt" 
+                placeholder="Start off the puzzle with a clever clue!"
+                style="width: 500px;">    
+            </p>
+            </div>
+        <div id="map" style="height: 50%"></div>
     <script>
         let map;
         let markers = [];
@@ -108,16 +119,53 @@
             }   
         }
     </script>
-    <form action="{% url 'submit_puzzle' hunt.id %}" method="post">
-        {% csrf_token %}
-        <div class="text-center">
-
-        </div>
         <input type="hidden" id="latLng" name="latLng">
         <label for="customRange1" class="form-label">Change Tolerance Level</label>
         <div class="container w-50">
             <input type="range" class="form-range" id="tolerance_range" min="5" max="50" value="10" name="radius">
         </div>
+        <p>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+            <script>
+                $(document).ready(function() {
+                    var max_fields = 4;
+                    var wrapper = $(".container1");
+                    var add_button = $(".add_form_field");
+
+                    var x = 1;
+                    $(add_button).click(function(e) {
+                        e.preventDefault();
+                        if (x < max_fields) {
+                            x++;
+                            // Basically adds this html line everytime they press add and removes it everytime they press delete
+                            $(wrapper).append(`<p><div><input type="text" name="hint${x}" style = "width:400px;"/><a href="#" class="delete">  Delete</a></div></p>`); //add input box
+                        } else {
+                            alert("You've reached the maximum of 4 hints.")
+                        }
+                    });
+
+                    $(wrapper).on("click", ".delete", function(e) {
+                        e.preventDefault();
+                        $(this).parent('div').remove();
+                        x--;
+                    })
+                });
+            </script>
+            <div class="container1">
+                <p>
+                    <button class="add_form_field">Add Hint &nbsp; 
+                    <span style="font-size:16px; font-weight:bold;">+ </span>
+                    </button>
+                </p>
+                <p>
+                    <div><input type="text" name="hint1" 
+                        placeholder="Each puzzle must have at least one hint!"
+                        style = "width:469px;" ></div>
+                </p>
+                
+            </div>
+        </p>
+        
         <button type="submit" class="btn btn-primary">Submit</button>
             <a href="{% url 'add_temp_hunt' hunt.id %}" class="btn btn-danger">Cancel</a>
     </form>
@@ -132,4 +180,9 @@
 # Resource
 # URL: https://developers.google.com/maps/documentation/javascript/load-maps-js-api#dynamic-library-import
 
+# Resource
+# Dynamic Input Field Text Box
+# URL: https://stackoverflow.com/questions/14853779/dynamically-creating-a-specific-number-of-input-form-elements
+# Date Accessed: 11/2/2023
+# Name: "M. Lak"
  -->

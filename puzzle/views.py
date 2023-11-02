@@ -79,12 +79,21 @@ def submit_hint(request, hunt_id, puzzle_id):
 def submit_puzzle(request, hunt_id):
     r = request.POST.get("radius")
     latLng = request.POST.get("latLng")
-    arr = latLng[1:-1].split(", ")
-
+    
+    hints = []
+    for i in range(1,5):
+        text = request.POST.get(f"hint{i}")
+        if text is not None:
+            hints.append(text)
     h = Hunt.objects.get(pk=hunt_id)
     # Should change "test" to some Post object
+    arr = latLng[1:-1].split(", ")
     p = Puzzle(prompt_text="test",hunt_id=h, radius=r,long=float(arr[1]), lat=float(arr[0]))
     p.save()
+    for hint_text in hints:
+        hint = Hint(hint_string=hint_text, puzzle_id=p)
+        hint.save()
+    
     return HttpResponseRedirect(reverse("add_temp_hunt", args=(h.id,)))
 
 def submit_hunt(request, hunt_id):
