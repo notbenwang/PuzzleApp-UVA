@@ -32,3 +32,9 @@ class Session(models.Model):
     total_hints_used = models.IntegerField(default = 0)
     total_score = models.IntegerField(default = 0)
     finished_puzzle = models.BooleanField(default=False)
+
+class Guess(models.Model):
+    session = models.ForeignKey(Session, on_delete=models.CASCADE, default=None, blank=True, null=True)
+    order = models.IntegerField(default=0)
+    long = models.FloatField(default = 0) 
+    lat = models.FloatField(default = 0)
