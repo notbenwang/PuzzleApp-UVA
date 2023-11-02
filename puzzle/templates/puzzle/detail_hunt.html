@@ -15,6 +15,7 @@
     <h3>{{ hunt.title }}</h3>
     <p>{{ hunt.summary}}</p>
     <a class="btn btn-success">Play</a>
+    <a href="{% url 'edit_hunt_view' 1 %}" class="btn btn-success">Edit Hunt</a>
     <a class="btn btn-danger" href="{% url 'dashboard' %}">Go Back</a>
   </div>
 </div>

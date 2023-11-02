@@ -11,10 +11,18 @@ from .models import CustomUser
 class AddHuntView(generic.DetailView):
     model = Hunt
     template_name = "puzzle/add_hunt.html"
+
+class EditHuntView(generic.DetailView):
+    model = Hunt
+    template_name = "puzzle/edit_hunt.html"
     
 class AddPuzzleView(generic.DetailView):
     model = Hunt
     template_name = "puzzle/add_puzzle.html"
+
+class EditPuzzleView(generic.DetailView):
+    model = Hunt
+    template_name = "puzzle/edit_puzzle.html"
 
 class DetailPuzzleView(generic.DetailView):
     model = Puzzle
@@ -59,6 +67,32 @@ def add_temp_hunt(request, hunt_id):
             p.save()
 
             return HttpResponseRedirect(reverse("add_hunt_view",args=(p.id,)))
+        
+def edit_hunt(request, hunt_id):
+    create_custom_user(request)
+    try:
+        p = Hunt.objects.get(pk=hunt_id)
+        return HttpResponseRedirect(reverse("edit_hunt_view", args=(p.id,)))
+    except Hunt.DoesNotExist:
+        try:
+            #First check to see if last hunt was not submitted. If so, use that hunt
+            creator = CustomUser.objects.get(social_id=request.user.id)
+            most_recent_hunt = Hunt.objects.filter(creator=creator).latest("pk")
+            if not most_recent_hunt.submitted:
+                p = most_recent_hunt
+            else:
+                creator = CustomUser.objects.get(social_id=request.user.id)
+                p = Hunt(title="",summary="",approved=False, creator=creator)
+                p.save()
+
+            return HttpResponseRedirect(reverse("edit_hunt_view",args=(p.id,)))
+
+        except Hunt.DoesNotExist:
+            creator = CustomUser.objects.get(social_id=request.user.id)
+            p = Hunt(title="", summary="", approved=False, creator=creator)
+            p.save()
+
+            return HttpResponseRedirect(reverse("edit_hunt_view",args=(p.id,)))
 
 
 def submit_puzzle(request, hunt_id):

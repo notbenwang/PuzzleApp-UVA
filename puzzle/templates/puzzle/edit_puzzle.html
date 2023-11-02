@@ -1,0 +1,135 @@
+{% extends "base_no_add.html" %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="">
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4zAcfYsYZqZKz4I1OikA8pqWxFkEk5oM&callback=initMap">
+    </script>
+      <link rel="stylesheet" href="{% static 'puzzle/css/splash_screen.css' %}" />
+
+    <title>Add puzzle </title>
+</head>
+<body>
+
+
+    <div class="container mx-3 my-3 text-center">
+      <div class="container text-center bg-white shadow p-1 mb-2 mt-2 bg-white rounded py-3 w-75">
+              <h3>Edit Puzzle</h3>
+    <!-- MAP OBJECT -->
+    <div id="map" style="height: 50%"></div>
+    <script>
+        let map;
+        let markers = [];
+        let circles = [];
+        radius = 10;
+
+        function initMap() {
+            const myLatlng = { lat: 38.033554, lng: -78.507980 };
+            document.getElementById('latLng').value = "(38.033554, -78.507980)";
+            const input = document.querySelector("#tolerance_range");
+            // Add map
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: myLatlng,
+                zoom: 17, 
+                streetViewControl: false,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            });
+            // Add marker
+            marker = new google.maps.Marker({
+                position: myLatlng,
+                map: map,
+            })
+            markers.push(marker);
+            // Add circle
+            circle = new google.maps.Circle({
+                strokeColor: "#FF0000",
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: "#FF0000",
+                fillOpacity: 0.35,
+                map,
+                center: myLatlng,
+                radius: radius
+            })
+            circles.push(circle);
+            // Add click event
+            map.addListener("click", (event) => {
+                document.getElementById('latLng').value = event.latLng;
+                addMarker(event.latLng);
+            });
+            // Add input event
+            input.addEventListener("input", (event)=>{
+                radius = input.value*1.01;
+                changeRadius(radius);
+            })
+            
+            function addCircle(position, new_radius){
+                if (circles.length != 0){
+                    circles[0].setMap(null);
+                    circles.pop();
+                }
+                new_circle = new google.maps.Circle({
+                    strokeColor: "#FF0000",
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: "#FF0000",
+                    fillOpacity: 0.35,
+                    map,
+                    center: position,
+                    radius: new_radius
+                })
+                circles.push(new_circle);
+            }
+            function changeRadius(r){
+                if (circles.length != 0){
+                    circles[0].setRadius(r);
+                }
+            }
+            function addMarker(position) {
+                if (markers.length != 0){
+                    markers[0].setMap(null);
+                    markers.pop();
+                }
+                const marker = new google.maps.Marker({
+                    position,
+                    map,
+                });
+                addCircle(position, radius);
+                markers.push(marker);
+                
+            }   
+        }
+    </script>
+    <form action="{% url 'submit_puzzle' hunt.id %}" method="post">
+        {% csrf_token %}
+        <div class="text-center">
+
+        </div>
+        <input type="hidden" id="latLng" name="latLng">
+        <label for="customRange1" class="form-label">Change Tolerance Level</label>
+        <div class="container w-50">
+            <input type="range" class="form-range" id="tolerance_range" min="5" max="50" value="10" name="radius">
+        </div>
+        <button type="submit" class="btn btn-primary">Submit</button>
+            <a href="{% url 'add_temp_hunt' hunt.id %}" class="btn btn-danger">Cancel</a>
+    </form>
+
+      </div>
+    </div>
+</body>
+</html>
+{% endblock content %}
+
+<!-- 
+# Resource
+# URL: https://developers.google.com/maps/documentation/javascript/load-maps-js-api#dynamic-library-import
+
+ -->
