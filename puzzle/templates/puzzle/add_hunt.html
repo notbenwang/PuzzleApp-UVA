@@ -10,17 +10,35 @@
 </head>
 <div class="container mx-3 my-3 text-center">
       <div class="container text-center bg-white shadow p-1 mb-2 mt-2 bg-white rounded py-3 w-50">
-    <h3 class="text-dark">Add A Hunt</h3>
-    {% for puzzle in hunt.puzzle_set.all %}
-        <p><a href="{% url 'detail_puzzle' puzzle.id hunt.id %}">
-            <span style="text-decoration: none"> > Puzzle: {{puzzle.id}} </span>
-        </a></p>
-    {% endfor %}
-    <p><a href="{% url 'add_puzzle_view' hunt.id %}" class="btn btn-info">
+    
+    <form action="{% url 'submit_hunt' hunt.id %}" method="post">
+      {% csrf_token %}
+      <h3 class="text-dark">Add A Hunt</h3>
+      <p>
+        <label>Title:</label>
+        <input type="text" class="title" name = "title" placeholder="Give me an awesome title!"
+          style="width: 350px;">
+      </p>
+      <p>
+        <label>Summary:</label>
+        <input type="text" class="summary" name = "summary" placeholder="What's your hunt about?"
+        style="width: 350px; ">
+      </p>
+      
+      {% for puzzle in hunt.puzzle_set.all %}
+          <p><a href="{% url 'detail_puzzle' puzzle.id hunt.id %}">
+              <span style="text-decoration: none"> > Puzzle: {{puzzle.id}} </span>
+          </a></p>
+      {% endfor %}
+      
+      <p><a href="{% url 'add_puzzle_view' hunt.id %}" class="btn btn-info">
         <span class="text-light">Add Puzzle</span>
-    </a></p>
-    <p><a href="{% url 'submit_hunt' hunt.id %}" class="btn btn-success">Submit Hunt</a>
-        <a href="{% url 'dashboard' %}" class="btn btn-danger">Go Back </a></p>
+      </a></p>
+    
+      <button type="submit" class="btn btn-success">Submit Hunt</button>
+    </form>
+        
+    <a href="{% url 'dashboard' %}" class="btn btn-danger">Go Back </a></p>
 
       </div>
 </div>
