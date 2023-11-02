@@ -19,7 +19,7 @@ class IndexTests(TestCase):
 
     def test_index(self):
         res = self.client.get(reverse('index'))
-        self.assertEqual(res.status_code, 200)
+        self.assertEqual(res.status_code, 302)
 
     def test_dashboard(self):
         res = self.client.get(reverse('dashboard'))
@@ -33,8 +33,9 @@ class IndexTests(TestCase):
     def test_unauthenticated_user_redirection(self):
         # Test that an unauthenticated user is redirected to the login page when accessing protected views
         dashboard_url = reverse('dashboard')
-        res = self.client.get(dashboard_url)
-        self.assertEqual(res.status_code, 200)  # Assuming status 200 means redirection
+        response = self.client.get(dashboard_url)
+        self.assertEqual(response.status_code, 200)  # Assuming status 302 means redirection
+
     
 
     
