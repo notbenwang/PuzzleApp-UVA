@@ -33,7 +33,10 @@ def create_custom_user(request):
     return custom_user
 
 def index(request):
-    return HttpResponse("You are at the puzzle index")
+    if request.user.id:
+        return HttpResponseRedirect(reverse("dashboard"))
+    else:
+        return HttpResponseRedirect("accounts/google/login")
 
 def add_temp_hunt(request, hunt_id):
     create_custom_user(request)

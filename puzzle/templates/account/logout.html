@@ -1,0 +1,23 @@
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+<head>
+  <link rel="stylesheet" href="{% static 'puzzle/css/splash_screen.css' %}" />
+</head>
+<body>
+  <div class="container text-center bg-white shadow p-1 mb-3 mt-5 bg-white rounded pt-3 pb-2 w-25">
+    <h5>Are you sure you want to sign out?</h5>
+        <form method="post" action="{% url 'account_logout' %}">
+          {% csrf_token %}
+          {% if redirect_field_value %}
+          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}"/>
+          {% endif %}
+          <button type="submit" class="btn btn-success">Sign Out</button>
+            <a href="{% url 'dashboard' %}" class="btn btn-danger">Take Me Back</a>
+        </form>
+
+  </div>
+</body>
+
