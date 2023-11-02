@@ -234,8 +234,8 @@ def get_puzzle_result(request, hunt_id, session_id):
     if score <= 0:
         score = 0
    
-    session.total_score += score
     if not session.finished_puzzle:
+        session.total_score += score
         session.current_hints_used = 0
         session.current_puzzle += 1
     session.finished_puzzle = True
