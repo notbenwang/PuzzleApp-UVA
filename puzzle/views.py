@@ -3,6 +3,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import generic
 from allauth.socialaccount.models import SocialAccount
+from django.contrib.auth.models import User
 from .models import Puzzle, Hunt, Hint, Session, Guess
 import math
 
@@ -32,11 +33,13 @@ def create_custom_user(request):
             is_admin = False
     return custom_user
 
+
 def index(request):
     if request.user.id:
         return HttpResponseRedirect(reverse("dashboard"))
     else:
         return HttpResponseRedirect("accounts/google/login")
+
 
 def add_temp_hunt(request, hunt_id):
     create_custom_user(request)
@@ -256,6 +259,19 @@ def go_next_puzzle(request, hunt_id, session_id):
         session.completed = True
         session.save()
         return render(request, "hunt_results.html", {"score":session.total_score, "hints":session.total_hints_used, "possible_score":(order-1)*5000})
+
+
+def admin_view(request):
+    social_id = request.user.id
+    custom_user = CustomUser.objects.get(social_id=social_id)
+    is_admin = custom_user.is_admin
+
+    users = CustomUser.objects.all()
+    social_users = list(map(lambda x: User.objects.get(pk=x.social_id), users))
+    user_zip = zip(users, social_users)
+
+
+    return render(request, "admin.html", {"is_admin": is_admin, "user_zip": user_zip})
 
 # Resource
 # URL: https://stackoverflow.com/questions/17813919/django-error-matching-query-does-not-exist
