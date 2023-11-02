@@ -5,7 +5,7 @@ from django.views.generic import TemplateView
 from . import views
 
 urlpatterns = [
-    path('', TemplateView.as_view(template_name="index.html"), name="index"),
+    path('', views.index, name="index"),
     path('dashboard/', views.dashboard, name="dashboard"),
     path("<int:hunt_id>/add_temp_hunt", views.add_temp_hunt, name="add_temp_hunt"),
     path("<int:pk>/add_hunt", views.AddHuntView.as_view(), name="add_hunt_view"),
