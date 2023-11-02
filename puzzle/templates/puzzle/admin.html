@@ -15,7 +15,7 @@
     <div class="container text-center">
         <h3 class="text-light">Administrative Settings</h3>
         <div class="container text-center bg-white shadow rounded py-2 w-50">
-             <form action="" method="post">
+             <form action="{% url 'set_admin' %}" method="post">
                  {% csrf_token %}
                 <strong>Add and Remove Administrators</strong>
                 <table class="container-fluid">
@@ -28,10 +28,10 @@
                         <td>{{social_user.email}}</td>
                         <td>
                             {% if user.is_admin %}
-                            <input checked class="form-check-input" id="admin_{{user.id}}"
+                            <input checked class="form-check-input" id="admin_{{user.id}}" name="admin_{{user.id}}"
                                    type="checkbox" value="">
                             {% else %}
-                            <input class="form-check-input" id="admin_{{user.id}}"
+                            <input class="form-check-input" id="admin_{{user.id}}" name="admin_{{user.id}}"
                                    type="checkbox" value="">
                             {% endif %}
                         </td>

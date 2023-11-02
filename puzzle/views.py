@@ -273,6 +273,22 @@ def admin_view(request):
 
     return render(request, "admin.html", {"is_admin": is_admin, "user_zip": user_zip})
 
+
+
+def set_admin(request):
+    users = CustomUser.objects.all()
+    social_users = list(map(lambda x: User.objects.get(pk=x.social_id), users))
+    user_zip = zip(users, social_users)
+
+    print(request.POST)
+    for user in users:
+        should_be_admin = request.POST.get("admin_" + str(user.social_id)) != None
+        setattr(user, 'is_admin', should_be_admin)
+        user.save()
+
+    return HttpResponseRedirect(reverse("admin_settings"))
+
+
 # Resource
 # URL: https://stackoverflow.com/questions/17813919/django-error-matching-query-does-not-exist
 # Name: Dracontis
@@ -290,4 +306,10 @@ def admin_view(request):
 # Name: Mermoz
 # Date: Nov 21 2010
 # Used to learn to zip lists to deliver mappings to view
+
+# Resource
+# URL: https://stackoverflow.com/questions/1545645/how-to-set-django-model-field-by-name
+# Name: Paul McMillan
+# Date: 0ct 9 2009
+# Used to learn how to set attributes in model
 
