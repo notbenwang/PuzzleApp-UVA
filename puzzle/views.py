@@ -267,9 +267,17 @@ def admin_view(request):
     is_admin = custom_user.is_admin
 
     users = CustomUser.objects.all()
-    social_users = list(map(lambda x: User.objects.get(pk=x.social_id), users))
-    user_zip = zip(users, social_users)
 
+    def get_social_user(custom_user):
+        try:
+            social_user = User.objects.get(pk=custom_user.social_id)
+            return social_user
+        except User.DoesNotExist:
+            return None
+
+    social_users = list(map(get_social_user, users))
+    user_zip = zip(users, social_users)
+    user_zip = list(filter(lambda x: x[1], user_zip))
 
     return render(request, "admin.html", {"is_admin": is_admin, "user_zip": user_zip})
 
