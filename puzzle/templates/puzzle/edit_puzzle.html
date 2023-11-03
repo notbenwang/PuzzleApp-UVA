@@ -22,18 +22,21 @@
 
     <div class="container mx-3 my-3 text-center">
       <div class="container text-center bg-white shadow p-1 mb-2 mt-2 bg-white rounded py-3 w-75">
-              <h3>Edit Puzzle</h3>
+              <h3>Edit Puzzle: {{puzzle.prompt_text}}</h3>
+
     <!-- MAP OBJECT -->
     <div id="map" style="height: 50%"></div>
     <script>
         let map;
         let markers = [];
         let circles = [];
-        radius = 10;
+        radius = {{ puzzle.radius }};
+        latitude = {{ puzzle.lat }};
+        longitude = {{ puzzle.long }};
 
         function initMap() {
-            const myLatlng = { lat: 38.033554, lng: -78.507980 };
-            document.getElementById('latLng').value = "(38.033554, -78.507980)";
+            const myLatlng = { lat: latitude, lng: longitude };
+            document.getElementById('latLng').value = "("+latitude+","+longitude+")";
             const input = document.querySelector("#tolerance_range");
             // Add map
             map = new google.maps.Map(document.getElementById("map"), {
@@ -108,7 +111,7 @@
             }   
         }
     </script>
-    <form action="{% url 'submit_puzzle' hunt.id %}" method="post">
+    <form action="{% url 'submit_edited_puzzle' puzzle.id %}" method="post">
         {% csrf_token %}
         <div class="text-center">
 
@@ -119,7 +122,7 @@
             <input type="range" class="form-range" id="tolerance_range" min="5" max="50" value="10" name="radius">
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
-            <a href="{% url 'add_temp_hunt' hunt.id %}" class="btn btn-danger">Cancel</a>
+            <a href="{% url 'add_temp_hunt' puzzle.hunt_id.id %}" class="btn btn-danger">Cancel</a>
     </form>
 
       </div>
