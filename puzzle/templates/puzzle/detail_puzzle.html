@@ -31,7 +31,7 @@
             <p>
                 <label>Prompt:</label>
                 <input type="text" class="prompt" name="prompt" 
-                placeholder= {{ puzzle.prompt_text }}
+                value= "{{ puzzle.prompt_text }}"
                 style="width: 500px;">    
             </p>
             </div>
@@ -133,8 +133,10 @@
                     var max_fields = 4;
                     var wrapper = $(".container1");
                     var add_button = $(".add_form_field");
+                    var x = "{{hints.count}}";
+                    var hints = "{{hints}}";
+                    console.log(x);
 
-                    var x = 1;
                     $(add_button).click(function(e) {
                         e.preventDefault();
                         if (x < max_fields) {
@@ -145,7 +147,9 @@
                             alert("You've reached the maximum of 4 hints.")
                         }
                     });
-
+                    for (i=1; i<x; i++){
+                        $(wrapper).append(`<p><div><input type="text" name="hint${x}" style = "width:400px;" value=""/><a href="#" class="delete">  Delete</a></div></p>`);
+                    }
                     $(wrapper).on("click", ".delete", function(e) {
                         e.preventDefault();
                         $(this).parent('div').remove();
@@ -162,7 +166,7 @@
                 <p>
                     <div><input type="text" name="hint1" 
                         placeholder="Each puzzle must have at least one hint!"
-                        style = "width:469px;" ></div>
+                        value="{{hints.first.hint_string}}"style = "width:469px;" ></div>
                 </p>
                 
             </div>

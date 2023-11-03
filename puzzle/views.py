@@ -24,6 +24,11 @@ class DetailPuzzleView(generic.DetailView):
         data['hints'] = Hint.objects.filter(puzzle_id = self.kwargs['puzzle_id'])
         return data
 
+def get_detail_puzzle(request, hunt_id, puzzle_id):
+    p = Puzzle.objects.get(pk=puzzle_id)
+    hints = Hint.objects.filter(puzzle_id=p)
+    return render(request, "detail_puzzle.html", {"puzzle": p, "hints": hints, })
+
 def create_custom_user(request):
     social_id = request.user.id
 
