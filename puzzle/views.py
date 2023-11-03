@@ -3,7 +3,7 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import generic
 from allauth.socialaccount.models import SocialAccount
-from .models import Puzzle, Hunt
+from .models import Puzzle, Hunt, Hint
 import json
 
 from .models import CustomUser
@@ -16,17 +16,13 @@ class AddPuzzleView(generic.DetailView):
     model = Hunt
     template_name = "puzzle/add_puzzle.html"
 
-class EditPuzzleView(generic.DetailView):
-    model = Puzzle
-    template_name = "puzzle/edit_puzzle.html"
-    def get_context_data(self, **kwargs):
-        data = super().get_context_data(**kwargs)
-        # data['context_id'] = self.kwargs['puzzle_id']
-        return data
-
 class DetailPuzzleView(generic.DetailView):
     model = Puzzle
     template_name = "detail_puzzle.html"
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['hints'] = Hint.objects.filter(puzzle_id = self.kwargs['puzzle_id'])
+        return data
 
 def create_custom_user(request):
     social_id = request.user.id

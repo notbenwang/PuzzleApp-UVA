@@ -1,30 +1,190 @@
 {% extends "base_no_add.html" %}
+{% load static %}
 {% load bootstrap5 %}
 {% bootstrap_css %}
 {% bootstrap_javascript %}
-{% load static %}
 
 {% block content %}
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>Puzzle Detail</title>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="">
+    <script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4zAcfYsYZqZKz4I1OikA8pqWxFkEk5oM&callback=initMap">
+    </script>
       <link rel="stylesheet" href="{% static 'puzzle/css/splash_screen.css' %}" />
+
+    <title>Edit Puzzle </title>
 </head>
 <body>
-<div class="container mx-3 my-3 text-center">
-      <div class="container text-center bg-white shadow p-1 mb-2 mt-2 bg-white rounded p-3 w-50">
-    <p>TEMPORARY; should make everything like radius, +hints editable here like the add_puzzle view</p>
-    <p>Puzzle ID: {{puzzle.id}}</p>
-    <p>Radius: {{puzzle.radius}}</p>
-    <p>Location: {{puzzle.lat}}, {{puzzle.long}}</p>
-    <p>Insert Some Visualization</p>
-    <p>
-      <a href="{% url 'add_temp_hunt' puzzle.hunt_id.id %}" class="btn btn-info">
-        <span class="text-light" >Back to Hunt</span>
-      </a>
-    </p>
-    <p><a href="{% url 'edit_puzzle_view' puzzle.id %}" class="btn btn-info">
-      <span style="text-decoration: none"> Edit Puzzle: {{puzzle.id}} </span>
-  </a></p>
-      </div></div>
+
+
+    <div class="container mx-3 my-3 text-center">
+      <div class="container text-center bg-white shadow p-1 mb-2 mt-2 bg-white rounded py-3 w-75">
+              <h3>Edit Puzzle</h3>
+    <!-- MAP OBJECT -->
+    
+    <form action="{% url 'submit_edited_puzzle' puzzle.id %}" method="post">
+        {% csrf_token %}
+        <div class="text-center">
+            <p>
+                <label>Prompt:</label>
+                <input type="text" class="prompt" name="prompt" 
+                placeholder= {{ puzzle.prompt_text }}
+                style="width: 500px;">    
+            </p>
+            </div>
+        <div id="map" style="height: 50%"></div>
+    <script>
+        let map;
+        let markers = [];
+        let circles = [];
+        radius = {{ puzzle.radius }};
+        latitude = {{ puzzle.lat }};
+        longitude = {{ puzzle.long }};
+
+        function initMap() {
+            const myLatlng = { lat: latitude, lng: longitude };
+            document.getElementById('latLng').value = "("+latitude+","+longitude+")";
+            const input = document.querySelector("#tolerance_range");
+            // Add map
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: myLatlng,
+                zoom: 17, 
+                streetViewControl: false,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            });
+            // Add marker
+            marker = new google.maps.Marker({
+                position: myLatlng,
+                map: map,
+            })
+            markers.push(marker);
+            // Add circle
+            circle = new google.maps.Circle({
+                strokeColor: "#FF0000",
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: "#FF0000",
+                fillOpacity: 0.35,
+                map,
+                center: myLatlng,
+                radius: radius
+            })
+            circles.push(circle);
+            // Add click event
+            map.addListener("click", (event) => {
+                document.getElementById('latLng').value = event.latLng;
+                addMarker(event.latLng);
+            });
+            // Add input event
+            input.addEventListener("input", (event)=>{
+                radius = input.value*1.01;
+                changeRadius(radius);
+            })
+            
+            function addCircle(position, new_radius){
+                if (circles.length != 0){
+                    circles[0].setMap(null);
+                    circles.pop();
+                }
+                new_circle = new google.maps.Circle({
+                    strokeColor: "#FF0000",
+                    strokeOpacity: 0.8,
+                    strokeWeight: 2,
+                    fillColor: "#FF0000",
+                    fillOpacity: 0.35,
+                    map,
+                    center: position,
+                    radius: new_radius
+                })
+                circles.push(new_circle);
+            }
+            function changeRadius(r){
+                if (circles.length != 0){
+                    circles[0].setRadius(r);
+                }
+            }
+            function addMarker(position) {
+                if (markers.length != 0){
+                    markers[0].setMap(null);
+                    markers.pop();
+                }
+                const marker = new google.maps.Marker({
+                    position,
+                    map,
+                });
+                addCircle(position, radius);
+                markers.push(marker);
+                
+            }   
+        }
+    </script>
+        <input type="hidden" id="latLng" name="latLng">
+        <label for="customRange1" class="form-label">Change Tolerance Level</label>
+        <div class="container w-50">
+            <input type="range" class="form-range" id="tolerance_range" min="5" max="50" value="10" name="radius">
+        </div>
+        <p>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+            <script>
+                $(document).ready(function() {
+                    var max_fields = 4;
+                    var wrapper = $(".container1");
+                    var add_button = $(".add_form_field");
+
+                    var x = 1;
+                    $(add_button).click(function(e) {
+                        e.preventDefault();
+                        if (x < max_fields) {
+                            x++;
+                            // Basically adds this html line everytime they press add and removes it everytime they press delete
+                            $(wrapper).append(`<p><div><input type="text" name="hint${x}" style = "width:400px;"/><a href="#" class="delete">  Delete</a></div></p>`); //add input box
+                        } else {
+                            alert("You've reached the maximum of 4 hints.")
+                        }
+                    });
+
+                    $(wrapper).on("click", ".delete", function(e) {
+                        e.preventDefault();
+                        $(this).parent('div').remove();
+                        x--;
+                    })
+                });
+            </script>
+            <div class="container1">
+                <p>
+                    <button class="add_form_field">Add Hint &nbsp; 
+                    <span style="font-size:16px; font-weight:bold;">+ </span>
+                    </button>
+                </p>
+                <p>
+                    <div><input type="text" name="hint1" 
+                        placeholder="Each puzzle must have at least one hint!"
+                        style = "width:469px;" ></div>
+                </p>
+                
+            </div>
+        </p>
+        
+        <button type="submit" class="btn btn-primary">Submit</button>
+            <a href="{% url 'add_temp_hunt' puzzle.hunt_id.id %}" class="btn btn-danger">Cancel</a>
+    </form>
+
+      </div>
+    </div>
 </body>
+</html>
 {% endblock content %}
+
+<!-- 
+# Resource
+# URL: https://developers.google.com/maps/documentation/javascript/load-maps-js-api#dynamic-library-import
+
+# Resource
+# Dynamic Input Field Text Box
+# URL: https://stackoverflow.com/questions/14853779/dynamically-creating-a-specific-number-of-input-form-elements
+# Date Accessed: 11/2/2023
+# Name: "M. Lak"
+ -->
