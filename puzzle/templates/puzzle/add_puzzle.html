@@ -138,7 +138,7 @@
                         if (x < max_fields) {
                             x++;
                             // Basically adds this html line everytime they press add and removes it everytime they press delete
-                            $(wrapper).append(`<p><div><input type="text" class="hint" name="hint${x}" style = "width:400px;"/><a href="#" class="delete">  Delete</a></div></p>`); //add input box
+                            $(wrapper).append(`<p><div><input type="text" id="hint${x}" name="hint${x}" style = "width:400px;"/><a href="#" class="delete">  Delete</a></div></p>`); //add input box
                         } else {
                             alert("You've reached the maximum of 4 hints.")
                         }
@@ -160,7 +160,7 @@
                 </p>
                 <p>
                     <div><input type="text" name="hint1" 
-                        class="hint" placeholder="Each puzzle must have at least one hint!"
+                        id="hint1" class="hint" placeholder="Each puzzle must have at least one hint!"
                         style = "width:469px;" ></div>
                 </p>
                 
@@ -168,13 +168,41 @@
         </p>
         <script type="text/javascript">
             function validateForm() {
-              var prompt = document.getElementById("prompt").value;
+              const prompt = document.getElementById("prompt").value;
+              
               if (prompt == null || prompt == "") {
-                
-                alert("Please fill required fields before submitting hunt.");
+                alert("Please add a prompt before submitting puzzle.");
                 return false;
               }
-                
+            
+              const hint1 = document.getElementById("hint1").value;
+              if (hint1 != null){
+                if (hint1 == ""){
+                    alert("Please make sure all fields are completely filled.");
+                    return false;
+                }
+              }
+              const hint2 = document.getElementById("hint2").value;
+              if (hint2 != null){
+                if (hint2 == ""){
+                    alert("Please make sure all fields are completely filled.");
+                    return false;
+                }
+              }
+              var hint3 = document.getElementById("hint3").value;
+              if (hint3 != null){
+                if (hint3 == ""){
+                    alert("Please make sure all fields are completely filled.");
+                    return false;
+                }
+              }
+              var hint4 = document.getElementById("hint4").value;
+              if (hint4 != null){
+                if (hint4 == ""){
+                    alert("Please make sure all fields are completely filled.");
+                    return false;
+                }
+              }
               
             }
           </script>
