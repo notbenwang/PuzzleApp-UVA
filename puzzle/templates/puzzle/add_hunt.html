@@ -11,7 +11,7 @@
 <div class="container mx-3 my-3 text-center">
       <div class="container text-center bg-white shadow p-1 mb-2 mt-2 bg-white rounded py-3 w-50">
     
-    <form action="{% url 'submit_hunt' hunt.id %}" method="post">
+    <form action="{% url 'submit_hunt' hunt.id %}" method="post" onsubmit="return validateForm()">
       {% csrf_token %}
       <h3 class="text-dark">Add A Hunt</h3>
       <p>
@@ -24,6 +24,16 @@
         <input type="text" class="summary" name = "summary" placeholder="What's your hunt about?"
         style="width: 350px; ">
       </p>
+      <script type="text/javascript">
+        function validateForm() {
+          var title = document.getElementsByClassName("title").value;
+          var summary = document.getElementsByClassName("summary").value;
+          if (title == null || title == "" || summary == null || summary == ""){
+            alert("Please fill required fields before submitting hunt.");
+            return false;
+          } 
+        }
+      </script>
       
       {% for puzzle in hunt.puzzle_set.all %}
           <p><a href="{% url 'detail_puzzle' puzzle.id hunt.id %}">
