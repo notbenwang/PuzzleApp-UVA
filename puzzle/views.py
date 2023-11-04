@@ -261,6 +261,13 @@ def go_next_puzzle(request, hunt_id, session_id):
         return render(request, "hunt_results.html", {"score":session.total_score, "hints":session.total_hints_used, "possible_score":(order-1)*5000})
 
 
+def get_social_user(custom_user):
+    try:
+        social_user = User.objects.get(pk=custom_user.social_id)
+        return social_user
+    except User.DoesNotExist:
+        return None
+
 def admin_view(request):
     social_id = request.user.id
     custom_user = CustomUser.objects.get(social_id=social_id)
@@ -268,12 +275,7 @@ def admin_view(request):
 
     users = CustomUser.objects.all()
 
-    def get_social_user(custom_user):
-        try:
-            social_user = User.objects.get(pk=custom_user.social_id)
-            return social_user
-        except User.DoesNotExist:
-            return None
+
 
     social_users = list(map(get_social_user, users))
     user_zip = zip(users, social_users)
@@ -285,10 +287,7 @@ def admin_view(request):
 
 def set_admin(request):
     users = CustomUser.objects.all()
-    social_users = list(map(lambda x: User.objects.get(pk=x.social_id), users))
-    user_zip = zip(users, social_users)
 
-    print(request.POST)
     for user in users:
         should_be_admin = request.POST.get("admin_" + str(user.social_id)) != None
         setattr(user, 'is_admin', should_be_admin)
