@@ -97,7 +97,7 @@ def submit_puzzle(request, hunt_id):
     arr = latLng[1:-1].split(", ")
     # Should change "test" to some Post object
     size = len(Puzzle.objects.filter(hunt_id=hunt_id))
-    p = Puzzle(prompt_text="test",hunt_id=h, radius=r,long=float(arr[1]), lat=float(arr[0]), order=size)
+    p = Puzzle(prompt_text=prompt,hunt_id=h, radius=r,long=float(arr[1]), lat=float(arr[0]), order=size)
     p.save()
     for hint_text in hints:
         hint = Hint(hint_string=hint_text, puzzle_id=p)
@@ -202,8 +202,8 @@ def play_puzzle(request, hunt_id, session_id):
     p = Puzzle.objects.filter(order = order, hunt_id = h)
     hints = Hint.objects.filter(puzzle_id = p.first())
     return render(request, "play_puzzle.html", {"puzzles": p, 
-                                                "prompt":hints.first, 
-                                                "hints":hints[1:hint_amount+1], 
+                                                "prompt": p.first().prompt_text, 
+                                                "hints":hints[0:hint_amount], 
                                                 "hint_amount":hint_amount, 
                                                 "order":order, "hunt":h,
                                                 "session_id":session.id })
@@ -215,7 +215,7 @@ def request_hint(request, hunt_id, session_id):
     hint_amount = session.current_hints_used
     p = Puzzle.objects.filter(order = order, hunt_id = h)
     hints = Hint.objects.filter(puzzle_id = p.first())
-    if hint_amount+1 < len(hints):
+    if hint_amount < len(hints):
         session.current_hints_used += 1
         session.total_hints_used += 1
         session.save()
