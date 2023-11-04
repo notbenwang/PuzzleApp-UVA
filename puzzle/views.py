@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from .models import Puzzle, Hunt, Hint, Session, Guess
 import math
 
+
 from .models import CustomUser
 
 class AddHuntView(generic.DetailView):
@@ -20,7 +21,13 @@ class AddPuzzleView(generic.DetailView):
 class DetailPuzzleView(generic.DetailView):
     model = Puzzle
     template_name = "detail_puzzle.html"
-
+class AddHintView(generic.DetailView):
+    model = Hunt
+    template_name = "add_hint.html"
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['context_id'] = self.kwargs['puzzle_id']
+        return data
 def create_custom_user(request):
     social_id = request.user.id
 
@@ -66,24 +73,44 @@ def add_temp_hunt(request, hunt_id):
             p.save()
 
             return HttpResponseRedirect(reverse("add_hunt_view",args=(p.id,)))
-
+def submit_hint(request, hunt_id, puzzle_id):
+    p = Puzzle.objects.get(pk=hunt_id)
+    if request.method == "POST":
+        hint_texts = [request.POST.get('hint1'), request.POST.get('hint2'), request.POST.get('hint3')]
+        for hint_text in hint_texts:
+            if hint_text:
+                hint = Hint(hint_string=hint_text, puzzle_id=puzzle_id)
+                hint.save()
+        return HttpResponseRedirect(reverse("detail_puzzle", args=(hunt_id,puzzle_id)))
+    return HttpResponseRedirect(reverse("detail_puzzle", args=(hunt_id,puzzle_id)))
 
 def submit_puzzle(request, hunt_id):
     r = request.POST.get("radius")
     latLng = request.POST.get("latLng")
-    arr = latLng[1:-1].split(", ")
-
+    prompt = request.POST.get("prompt")
+    hints = []
+    for i in range(1,5):
+        text = request.POST.get(f"hint{i}")
+        if text is not None:
+            hints.append(text)
     h = Hunt.objects.get(pk=hunt_id)
+    arr = latLng[1:-1].split(", ")
     # Should change "test" to some Post object
     size = len(Puzzle.objects.filter(hunt_id=hunt_id))
-    
     p = Puzzle(prompt_text="test",hunt_id=h, radius=r,long=float(arr[1]), lat=float(arr[0]), order=size)
     p.save()
+    for hint_text in hints:
+        hint = Hint(hint_string=hint_text, puzzle_id=p)
+        hint.save()
     return HttpResponseRedirect(reverse("add_temp_hunt", args=(h.id,)))
 
 def submit_hunt(request, hunt_id):
     h = Hunt.objects.get(pk=hunt_id)
+    title = request.POST.get("title")
+    summary = request.POST.get("summary")
     h.submitted = True
+    h.title = title
+    h.summary = summary
     h.save()
     return HttpResponseRedirect(reverse("dashboard"))
 
