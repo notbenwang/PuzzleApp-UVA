@@ -27,7 +27,16 @@ class DetailPuzzleView(generic.DetailView):
 def get_detail_puzzle(request, hunt_id, puzzle_id):
     p = Puzzle.objects.get(pk=puzzle_id)
     hints = Hint.objects.filter(puzzle_id=p)
-    return render(request, "detail_puzzle.html", {"puzzle": p, "hints": hints, })
+    hint_array = [0] * 4
+    i = 0
+    for hint in hints:
+        hint_array[i] = hint
+        i+=1
+    return render(request, "detail_puzzle.html", {"puzzle": p, "hints": hints, 
+                                                  "hint1" : hint_array[0],
+                                                  "hint2" : hint_array[1],
+                                                  "hint3" : hint_array[2],
+                                                  "hint4" : hint_array[3],})
 
 def create_custom_user(request):
     social_id = request.user.id

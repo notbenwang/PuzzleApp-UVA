@@ -122,6 +122,10 @@
         }
     </script>
         <input type="hidden" id="latLng" name="latLng">
+        <input type="hidden" id="hint1" value="{{hint1.hint_string}}">
+        <input type="hidden" id="hint2" value="{{hint2.hint_string}}">
+        <input type="hidden" id="hint3" value="{{hint3.hint_string}}">
+        <input type="hidden" id="hint4" value="{{hint4.hint_string}}">
         <label for="customRange1" class="form-label">Change Tolerance Level</label>
         <div class="container w-50">
             <input type="range" class="form-range" id="tolerance_range" min="5" max="50" value="10" name="radius">
@@ -135,7 +139,7 @@
                     var add_button = $(".add_form_field");
                     var x = "{{hints.count}}";
                     var hints = "{{hints}}";
-                    console.log(x);
+                    
 
                     $(add_button).click(function(e) {
                         e.preventDefault();
@@ -148,7 +152,8 @@
                         }
                     });
                     for (i=1; i<x; i++){
-                        $(wrapper).append(`<p><div><input type="text" name="hint${x}" style = "width:400px;" value=""/><a href="#" class="delete">  Delete</a></div></p>`);
+                        value = document.getElementById("hint"+(i+1)).value;
+                        $(wrapper).append(`<p><div><input type="text" name="hint${x}" style = "width:400px;" value="${value}"/><a href="#" class="delete">  Delete</a></div></p>`);
                     }
                     $(wrapper).on("click", ".delete", function(e) {
                         e.preventDefault();
