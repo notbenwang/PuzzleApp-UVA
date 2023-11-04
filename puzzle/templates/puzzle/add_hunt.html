@@ -16,18 +16,18 @@
       <h3 class="text-dark">Add A Hunt</h3>
       <p>
         <label>Title:</label>
-        <input type="text" class="title" name = "title" placeholder="Give me an awesome title!"
+        <input type="text" class="title" name = "title" id = "title" placeholder="Give me an awesome title!"
           style="width: 350px;">
       </p>
       <p>
         <label>Summary:</label>
-        <input type="text" class="summary" name = "summary" placeholder="What's your hunt about?"
+        <input type="text" class="summary" name = "summary" id="summary" placeholder="What's your hunt about?"
         style="width: 350px; ">
       </p>
       <script type="text/javascript">
         function validateForm() {
-          var title = document.getElementsByClassName("title").value;
-          var summary = document.getElementsByClassName("summary").value;
+          var title = document.getElementById("title").value;
+          var summary = document.getElementById("summary").value;
           if (title == null || title == "" || summary == null || summary == ""){
             alert("Please fill required fields before submitting hunt.");
             return false;

@@ -25,12 +25,12 @@
               <h3>Add A Puzzle</h3>
     <!-- MAP OBJECT -->
     
-    <form action="{% url 'submit_puzzle' hunt.id %}" method="post">
+    <form action="{% url 'submit_puzzle' hunt.id %}" method="post" onsubmit="return validateForm()">
         {% csrf_token %}
         <div class="text-center">
             <p>
                 <label>Prompt:</label>
-                <input type="text" class="prompt" name="prompt" 
+                <input type="text" class="prompt" name="prompt" id="prompt"
                 placeholder="Start off the puzzle with a clever clue!"
                 style="width: 500px;">    
             </p>
@@ -138,7 +138,7 @@
                         if (x < max_fields) {
                             x++;
                             // Basically adds this html line everytime they press add and removes it everytime they press delete
-                            $(wrapper).append(`<p><div><input type="text" name="hint${x}" style = "width:400px;"/><a href="#" class="delete">  Delete</a></div></p>`); //add input box
+                            $(wrapper).append(`<p><div><input type="text" class="hint" name="hint${x}" style = "width:400px;"/><a href="#" class="delete">  Delete</a></div></p>`); //add input box
                         } else {
                             alert("You've reached the maximum of 4 hints.")
                         }
@@ -151,6 +151,7 @@
                     })
                 });
             </script>
+           
             <div class="container1">
                 <p>
                     <button class="add_form_field">Add Hint &nbsp; 
@@ -159,13 +160,24 @@
                 </p>
                 <p>
                     <div><input type="text" name="hint1" 
-                        placeholder="Each puzzle must have at least one hint!"
+                        class="hint" placeholder="Each puzzle must have at least one hint!"
                         style = "width:469px;" ></div>
                 </p>
                 
             </div>
         </p>
-        
+        <script type="text/javascript">
+            function validateForm() {
+              var prompt = document.getElementById("prompt").value;
+              if (prompt == null || prompt == "") {
+                
+                alert("Please fill required fields before submitting hunt.");
+                return false;
+              }
+                
+              
+            }
+          </script>
         <button type="submit" class="btn btn-primary">Submit</button>
             <a href="{% url 'add_temp_hunt' hunt.id %}" class="btn btn-danger">Cancel</a>
     </form>
