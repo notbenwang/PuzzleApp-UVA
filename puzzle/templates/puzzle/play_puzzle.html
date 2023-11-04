@@ -1,4 +1,20 @@
-<h1>Play</h1>
+{% extends "base.html" %}
+{% load socialaccount %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block content %}
+<head>
+  <link rel="stylesheet" href="{% static 'puzzle/css/splash_screen.css' %}" />
+</head>
+
+<div class="container text-center">
+    <h1>Play</h1>
+</div>
+<div class="container text-center bg-white shadow mt-2 p-1">
+
 <p>YOUR CLUE: {{prompt.hint_string}}</p>
 
 {% for puzzle in puzzles %}
@@ -57,3 +73,6 @@
             }   
         }
 </script>
+    </div>
+
+{% endblock content %}

@@ -1,8 +1,24 @@
-<p>Distance: {{distance}} feet or {{miles}} miles</p>
-<p>Radius: {{radius}}</p>
-<p>Score: {{score}}</p>
+{% extends "base.html" %}
+{% load socialaccount %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block content %}
+<head>
+  <link rel="stylesheet" href="{% static 'puzzle/css/splash_screen.css' %}" />
+</head>
+
+<div class="container text-center">
+    <h1>Result</h1>
+</div>
+<div class="container text-center bg-white shadow mt-2 p-1">
+<p>You were {{distance}} feet or {{miles}} miles off </p>
+<p>Answers within {{radius}} feet of the target were deemed correct</p>
+<h4>Score: {{score}}</h4>
 <div id="map" style="height: 50%"></div>
-<a href="{% url 'get_next_puzzle' hunt_id session_id %}">Go Next Puzzle</a>
+<a href="{% url 'get_next_puzzle' hunt_id session_id %}" class="btn btn-success mt-2">Go Next Puzzle</a>
 <script async defer
     src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4zAcfYsYZqZKz4I1OikA8pqWxFkEk5oM&callback=initMap">
 </script>
@@ -59,3 +75,6 @@
             
         }
 </script>
+</div>
+
+{% endblock content %}

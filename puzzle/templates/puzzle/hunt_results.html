@@ -1,5 +1,24 @@
-<h1>Results</h1>
-<p>Your overall score was: {{score}}</p>
+{% extends "base.html" %}
+{% load socialaccount %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block content %}
+<head>
+  <link rel="stylesheet" href="{% static 'puzzle/css/splash_screen.css' %}" />
+</head>
+
+<div class="container text-center">
+    <h1>Overall Results</h1>
+</div>
+<div class="container text-center bg-white shadow mt-2 p-1 w-50 rounded">
+
+<h4>Your overall score was: {{score}}</h4>
 <p>You used a total of {{hints}} hints.</p>
 
-<a href= "{% url 'dashboard' %}" >Go back</a>
+<a href= "{% url 'dashboard' %}" class="btn btn-success mb-2">Go back</a>
+</div>
+
+{% endblock %}
