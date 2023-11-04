@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+{% load socialaccount %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block content %}
+<head>
+  <link rel="stylesheet" href="{% static 'puzzle/css/splash_screen.css' %}" />
+</head>
+
+<div class="container text-center">
+    <h1>Play</h1>
+</div>
+<div class="container text-center bg-white shadow mt-2 p-1">
+
+<p>YOUR CLUE: {{prompt.hint_string}}</p>
+
+{% for puzzle in puzzles %}
+    {% for hint in hints %}
+        <p>Hint: {{hint.hint_string}}</p>
+    {% endfor %}
+{% endfor %}
+<div id="map" style="height: 50%"></div>
+
+<form action ="{% url 'get_puzzle_result' hunt.id session_id %}" method = "post">
+    {% csrf_token %}
+    <input type="hidden" id="latLng" name="latLng">
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+<p>Amount of hints used: {{hint_amount}}</p>
+<a href="{% url 'request_hint' hunt.id session_id %}">Request Hint</a>
+<script async defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB4zAcfYsYZqZKz4I1OikA8pqWxFkEk5oM&callback=initMap">
+</script>
+<script>
+    let map;
+    let markers = [];
+
+    function initMap() {
+            const myLatlng = { lat: 38.033554, lng: -78.507980 };
+            document.getElementById('latLng').value = "(38.033554, -78.507980)";
+            // Add map
+            map = new google.maps.Map(document.getElementById("map"), {
+                center: myLatlng,
+                zoom: 17, 
+                streetViewControl: false,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            });
+            // Add marker
+            marker = new google.maps.Marker({
+                position: myLatlng,
+                map: map,
+            })
+            markers.push(marker);
+            map.addListener("click", (event) => {
+                document.getElementById('latLng').value = event.latLng;
+                addMarker(event.latLng);
+            });
+            
+            function addMarker(position) {
+                if (markers.length != 0){
+                    markers[0].setMap(null);
+                    markers.pop();
+                }
+                const marker = new google.maps.Marker({
+                    position,
+                    map,
+                });
+                markers.push(marker);
+                
+            }   
+        }
+</script>
+    </div>
+
+{% endblock content %}

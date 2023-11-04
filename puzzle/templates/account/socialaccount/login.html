@@ -1,0 +1,17 @@
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+<head>
+  <link rel="stylesheet" href="{% static 'puzzle/css/splash_screen.css' %}" />
+</head>
+<body>
+  <div class="container text-center bg-white shadow p-1 mb-3 mt-5 bg-white rounded pt-3 pb-2 w-50">
+    <h1 class="text-dark">Puzzle App @ UVA</h1>
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-success mt-3">Login with Google</button>
+    </form>
+  </div>
+</body>

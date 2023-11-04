@@ -5,7 +5,7 @@ from django.views.generic import TemplateView
 from . import views
 
 urlpatterns = [
-    path('', TemplateView.as_view(template_name="index.html"), name="index"),
+    path('', views.index, name="index"),
     path('dashboard/', views.dashboard, name="dashboard"),
     path("<int:hunt_id>/add_temp_hunt", views.add_temp_hunt, name="add_temp_hunt"),
     path("<int:pk>/add_hunt", views.AddHuntView.as_view(), name="add_hunt_view"),
@@ -16,6 +16,16 @@ urlpatterns = [
     path("<int:hunt_id>/hunt", views.view_hunt, name="view_hunt"),
     path("<int:pk>/add_hint/<int:puzzle_id>", views.AddHintView.as_view(), name="add_hint_view"),
     path("<int:pk>/puzzle/<int:puzzle_id>/submit_hint", views.submit_hint, name="submit_hint"),
+    path("<int:hunt_id>/approve/hunt", views.approve_hunt, name="approve_hunt"),
+    path("<int:hunt_id>/deny/hunt", views.deny_hunt, name="deny_hunt"),
+    path("<int:hunt_id>/play_hunt", views.play_hunt, name="play_hunt"),
+    path("<int:hunt_id>/play/<int:session_id>", views.play_puzzle, name="play_puzzle"),
+    path("<int:hunt_id>/play/<int:session_id>/request_hint", views.request_hint, name="request_hint"),
+    # path("<int:hunt_id>/play/<int:order>/results", views.get_puzzle_result, name="get_puzzle_result"),
+    path("<int:hunt_id>/play/<int:session_id>/results", views.get_puzzle_result, name="get_puzzle_result"),
+    path("<int:hunt_id>/play/<int:session_id>/next", views.go_next_puzzle, name="get_next_puzzle"),
+    path("admin_settings/", views.admin_view, name="admin_settings"),
+    path("admin_settings/set_admin", views.set_admin, name="set_admin")
     # path('accounts/', include('allauth.urls')),
     # path('logout', LogoutView.as_view()),
     # path('accounts/google/login/', views.login, name='account_login'),
