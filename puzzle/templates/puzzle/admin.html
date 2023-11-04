@@ -28,10 +28,10 @@
                         <td>{{social_user.email}}</td>
                         <td>
                             {% if user.is_admin %}
-                            <input checked class="form-check-input" id="admin_{{user.id}}" name="admin_{{user.id}}"
+                            <input checked class="form-check-input" id="admin_{{user.id}}" name="admin_{{user.social_id}}"
                                    type="checkbox" value="">
                             {% else %}
-                            <input class="form-check-input" id="admin_{{user.id}}" name="admin_{{user.id}}"
+                            <input class="form-check-input" id="admin_{{user.id}}" name="admin_{{user.social_id}}"
                                    type="checkbox" value="">
                             {% endif %}
                         </td>
