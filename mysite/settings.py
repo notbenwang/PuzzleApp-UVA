@@ -29,7 +29,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-j72_mh$bc7mr7q^fcb11i%fjksc&d85-aztak6a=0xp0)&jk++'
 
 IS_HEROKU_APP = "DYNO" in os.environ and not "CI" in os.environ
-DEBUG=True
+
 if not IS_HEROKU_APP:
     DEBUG = True
 # SECURITY WARNING: don't run with debug turned on in production!
