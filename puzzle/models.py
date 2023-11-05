@@ -25,7 +25,7 @@ class Hint(models.Model):
 
 class Session(models.Model):
     player = models.ForeignKey(CustomUser, on_delete=models.DO_NOTHING, default=None, blank=True, null=True)
-    hunt = models.ForeignKey(Hunt, on_delete=models.DO_NOTHING, default=None, blank=True, null=True)
+    hunt = models.ForeignKey(Hunt, on_delete=models.CASCADE, default=None, blank=True, null=True)
     completed = models.BooleanField(default=False)
     current_puzzle = models.IntegerField(default = 0)
     current_hints_used = models.IntegerField(default = 0)
