@@ -186,11 +186,18 @@ def play_hunt(request, hunt_id):
     session = get_session(request, hunt_id)
     if session.completed:
         order = session.current_puzzle
-        return render(request, "hunt_results.html", {"score":session.total_score, "hints":session.total_hints_used, "possible_score":(order-1)*5000})
+        return render(request, "hunt_results.html", {"hunt_id":hunt_id, "score":session.total_score, "hints":session.total_hints_used, "possible_score":(order-1)*5000})
     elif session.finished_puzzle:
         return HttpResponseRedirect(reverse("get_puzzle_result", kwargs={"hunt_id":hunt_id, "session_id":session.id}))
     else:
         return HttpResponseRedirect(reverse("play_puzzle", kwargs={"hunt_id":hunt_id, "session_id" : session.id}))
+
+def reset_session(request, hunt_id):
+    session = get_session(request=request, hunt_id=hunt_id)
+    if session.completed:
+        session.delete()
+        return HttpResponseRedirect(reverse("play_hunt", kwargs={"hunt_id":hunt_id}))
+    
 
 def play_puzzle(request, hunt_id, session_id):
     session = Session.objects.get(pk=session_id)
@@ -285,7 +292,7 @@ def go_next_puzzle(request, hunt_id, session_id):
     else:
         session.completed = True
         session.save()
-        return render(request, "hunt_results.html", {"score":session.total_score, "hints":session.total_hints_used, "possible_score":(order-1)*5000})
+        return render(request, "hunt_results.html", {"hunt_id":hunt_id, "score":session.total_score, "hints":session.total_hints_used, "possible_score":(order-1)*5000})
 
 
 def get_social_user(custom_user):
@@ -321,6 +328,7 @@ def set_admin(request):
         user.save()
 
     return HttpResponseRedirect(reverse("admin_settings"))
+
 
 
 # Resource
