@@ -14,8 +14,15 @@
   <div class="container text-center bg-white shadow  bg-white rounded py-3 w-50">
     <h3>{{ hunt.title }}</h3>
     <p>{{ hunt.summary}}</p>
-    <a class="btn btn-success" href="{% url 'play_hunt' hunt.id %}">Deny</a>
-    <a class="btn btn-danger" href="{% url 'dashboard' %}">Go Back</a>
+    <form action="{% url 'deny_hunt' hunt.id %}" method="post">
+      {% csrf_token %}
+        <textarea placeholder="Your feedback..."
+                  style="max-height: 150px; min-height: 150px;"
+                  name="comments"></textarea>
+          <br/>
+        <button>Deny</button>
+        <a class="btn btn-danger mt-2" href="{% url 'dashboard' %}">Go Back</a>
+      </form>
   </div>
 </div>
 
