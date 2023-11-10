@@ -24,12 +24,12 @@
               <h3>Edit Puzzle</h3>
     <!-- MAP OBJECT -->
     
-    <form action="{% url 'submit_edited_puzzle' puzzle.id %}" method="post">
+    <form action="{% url 'submit_edited_puzzle' puzzle.id %}" method="post" onsubmit="return validateForm()"> 
         {% csrf_token %}
         <div class="text-center">
             <p>
                 <label>Prompt:</label>
-                <input type="text" class="prompt" name="prompt" 
+                <input type="text" id="prompt" class="prompt" name="prompt" 
                 value= "{{ puzzle.prompt_text }}"
                 style="width: 500px;">    
             </p>
@@ -163,6 +163,17 @@
                     })
                 });
             </script>
+            <script type="text/javascript">
+                function validateForm() {
+                  const prompt = document.getElementById("prompt").value;
+                  
+                  if (prompt == null || prompt == "") {
+                    alert("Please add a prompt before submitting puzzle.");
+                    return false;
+                  }
+                  
+                }
+              </script>
             <div class="container1">
                 <p>
                     <button class="add_form_field">Add Hint &nbsp; 

@@ -32,12 +32,17 @@
             alert("Please fill required fields before submitting hunt.");
             return false;
           } 
+          var puzzle_amount = "{{hunt.puzzle_set.all.count}}"
+          if (puzzle_amount <= 0){
+            alert("All hunts must consist of at least one puzzle.");
+            return false;
+          }
         }
       </script>
       
       {% for puzzle in hunt.puzzle_set.all %}
-          <p><a href="{% url 'detail_puzzle' puzzle.id hunt.id %}">
-              <span style="text-decoration: none"> > Puzzle: {{puzzle.id}} </span>
+          <p><a href="{% url 'detail_puzzle' hunt.id puzzle.id %}">
+              <span style="text-decoration: none"> {{puzzle.order | add:"1"}}. Puzzle ID:{{puzzle.id}} </span>
           </a></p>
       {% endfor %}
       
