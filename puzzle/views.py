@@ -230,6 +230,10 @@ def deny_hunt(request, hunt_id):
 
     return HttpResponseRedirect(reverse("dashboard"))
 
+def view_deny(request, hunt_id):
+    hunt = Hunt.objects.get(pk=hunt_id)
+    return render(request, "deny_hunt.html", {"hunt": hunt})
+
 def get_session(request, hunt_id):
     user = create_custom_user(request)
     h = Hunt.objects.get(pk=hunt_id)
