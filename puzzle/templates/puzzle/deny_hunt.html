@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load socialaccount %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block content %}
+
+<head>
+  <link rel="stylesheet" href="{% static 'puzzle/css/splash_screen.css' %}" />
+</head>
+<div class="container mx-3 my-3 text-center">
+  <div class="container text-center bg-white shadow  bg-white rounded py-3 w-50">
+    <h3>{{ hunt.title }}</h3>
+    <p>{{ hunt.summary}}</p>
+    <form action="{% url 'deny_hunt' hunt.id %}" method="post">
+      {% csrf_token %}
+        <textarea placeholder="Your feedback..."
+                  style="max-height: 150px; min-height: 150px;"
+                  name="comments"></textarea>
+          <br/>
+        <button class="btn btn-success mt-2">Deny</button>
+        <a class="btn btn-danger mt-2" href="{% url 'dashboard' %}">Go Back</a>
+      </form>
+  </div>
+</div>
+
+{% endblock %}

@@ -224,9 +224,15 @@ def approve_hunt(request, hunt_id):
 
 def deny_hunt(request, hunt_id):
     hunt = Hunt.objects.get(pk=hunt_id)
-    hunt.delete()
+    hunt.submitted = False
+    hunt.comments = request.POST.get("comments")
+    hunt.save()
 
     return HttpResponseRedirect(reverse("dashboard"))
+
+def view_deny(request, hunt_id):
+    hunt = Hunt.objects.get(pk=hunt_id)
+    return render(request, "deny_hunt.html", {"hunt": hunt})
 
 def get_session(request, hunt_id):
     user = create_custom_user(request)
