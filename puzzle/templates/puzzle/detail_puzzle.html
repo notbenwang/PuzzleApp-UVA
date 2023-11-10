@@ -46,7 +46,8 @@
 
         function initMap() {
             const myLatlng = { lat: latitude, lng: longitude };
-            document.getElementById('latLng').value = "("+latitude+","+longitude+")";
+            // document.getElementById('latLng').value = myLatlng.latLng;
+            // console.log(document.getElementById('latLng').value);
             const input = document.querySelector("#tolerance_range");
             // Add map
             map = new google.maps.Map(document.getElementById("map"), {
@@ -76,6 +77,7 @@
             // Add click event
             map.addListener("click", (event) => {
                 document.getElementById('latLng').value = event.latLng;
+                // console.log(event.latLng);
                 addMarker(event.latLng);
             });
             // Add input event
@@ -177,7 +179,7 @@
             </div>
         </p>
         
-        <button type="submit" class="btn btn-primary">Submit</button>
+        <button type="submit" class="btn btn-primary">Save</button>
             <a href="{% url 'add_temp_hunt' puzzle.hunt_id.id %}" class="btn btn-danger">Cancel</a>
     </form>
 

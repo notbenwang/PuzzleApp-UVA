@@ -81,13 +81,41 @@ def add_temp_hunt(request, hunt_id):
 def submit_edited_puzzle(request, puzzle_id):
     r = request.POST.get("radius")
     latLng = request.POST.get("latLng")
-    arr = latLng[1:-1].split(", ")
-
     p = Puzzle.objects.get(pk=puzzle_id)
+    if latLng:
+        arr = latLng[1:-1].split(", ")
+        p.lat = float(arr[0])
+        p.long = float(arr[1])
+    prompt = request.POST.get("prompt")
+    
+    if request.method == "POST":
+        hint_texts = [request.POST.get('hint1'), request.POST.get('hint2'), request.POST.get('hint3'),request.POST.get('hint4')]
+        hints = Hint.objects.filter(puzzle_id=p)
+        
+        i = 0
+        for hint in hints:
+            if hint_texts[i]:
+                hint.hint_string = hint_texts[i]
+                hint.save()
+            else:
+                hint.delete()
+            i += 1
+
+        while hint_texts[i]:
+            hint = Hint(hint_string=hint_texts[i], puzzle_id=p)
+            hint.save()
+            i+=1
+
+        # for i in range(len(hint_texts)):
+        #     hint_text = hint_texts[i]
+        #     if hint_text:
+        #         hint = Hint(hint_string=hint_text, puzzle_id=p)
+        #         hint.save()
+        # return HttpResponseRedirect(reverse("detail_puzzle", args=(hunt_id,puzzle_id)))
     # Should change "test" to some Post object
+    p.prompt_text = prompt
     p.radius = r
-    p.lat = float(arr[0])
-    p.long = float(arr[1])
+    
     # p = Puzzle(prompt_text="test",hunt_id=h, radius=r,long=float(arr[1]), lat=float(arr[0]))
 
     p.save()
