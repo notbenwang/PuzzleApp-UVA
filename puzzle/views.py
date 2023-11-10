@@ -7,7 +7,6 @@ from django.contrib.auth.models import User
 from .models import Puzzle, Hunt, Hint, Session, Guess
 import math
 
-
 from .models import CustomUser
 
 class AddHuntView(generic.DetailView):
@@ -21,13 +20,25 @@ class AddPuzzleView(generic.DetailView):
 class DetailPuzzleView(generic.DetailView):
     model = Puzzle
     template_name = "detail_puzzle.html"
-class AddHintView(generic.DetailView):
-    model = Hunt
-    template_name = "add_hint.html"
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        data['context_id'] = self.kwargs['puzzle_id']
+        data['hints'] = Hint.objects.filter(puzzle_id = self.kwargs['puzzle_id'])
         return data
+
+def get_detail_puzzle(request, hunt_id, puzzle_id):
+    p = Puzzle.objects.get(pk=puzzle_id)
+    hints = Hint.objects.filter(puzzle_id=p)
+    hint_array = [0] * 4
+    i = 0
+    for hint in hints:
+        hint_array[i] = hint
+        i+=1
+    return render(request, "detail_puzzle.html", {"puzzle": p, "hints": hints, 
+                                                  "hint1" : hint_array[0],
+                                                  "hint2" : hint_array[1],
+                                                  "hint3" : hint_array[2],
+                                                  "hint4" : hint_array[3],})
+
 def create_custom_user(request):
     social_id = request.user.id
 
@@ -73,16 +84,61 @@ def add_temp_hunt(request, hunt_id):
             p.save()
 
             return HttpResponseRedirect(reverse("add_hunt_view",args=(p.id,)))
-def submit_hint(request, hunt_id, puzzle_id):
-    p = Puzzle.objects.get(pk=hunt_id)
+        
+def submit_edited_puzzle(request, puzzle_id):
+    r = request.POST.get("radius")
+    latLng = request.POST.get("latLng")
+    p = Puzzle.objects.get(pk=puzzle_id)
+    if latLng:
+        arr = latLng[1:-1].split(", ")
+        p.lat = float(arr[0])
+        p.long = float(arr[1])
+    prompt = request.POST.get("prompt")
+    
     if request.method == "POST":
-        hint_texts = [request.POST.get('hint1'), request.POST.get('hint2'), request.POST.get('hint3')]
-        for hint_text in hint_texts:
-            if hint_text:
-                hint = Hint(hint_string=hint_text, puzzle_id=puzzle_id)
+        hint_texts = [request.POST.get('hint1'), request.POST.get('hint2'), request.POST.get('hint3'),request.POST.get('hint4')]
+        hints = Hint.objects.filter(puzzle_id=p)
+        
+        i = 0
+        for hint in hints:
+            if hint_texts[i]:
+                hint.hint_string = hint_texts[i]
                 hint.save()
-        return HttpResponseRedirect(reverse("detail_puzzle", args=(hunt_id,puzzle_id)))
-    return HttpResponseRedirect(reverse("detail_puzzle", args=(hunt_id,puzzle_id)))
+            else:
+                hint.delete()
+            i += 1
+
+        while hint_texts[i]:
+            hint = Hint(hint_string=hint_texts[i], puzzle_id=p)
+            hint.save()
+            i+=1
+
+        # for i in range(len(hint_texts)):
+        #     hint_text = hint_texts[i]
+        #     if hint_text:
+        #         hint = Hint(hint_string=hint_text, puzzle_id=p)
+        #         hint.save()
+        # return HttpResponseRedirect(reverse("detail_puzzle", args=(hunt_id,puzzle_id)))
+    # Should change "test" to some Post object
+    p.prompt_text = prompt
+    p.radius = r
+    
+    # p = Puzzle(prompt_text="test",hunt_id=h, radius=r,long=float(arr[1]), lat=float(arr[0]))
+
+    p.save()
+    return HttpResponseRedirect(reverse("add_temp_hunt", args=(p.hunt_id.id,)))
+# =======
+# def submit_hint(request, hunt_id, puzzle_id):
+#     p = Puzzle.objects.get(pk=hunt_id)
+#     if request.method == "POST":
+#         hint_texts = [request.POST.get('hint1'), request.POST.get('hint2'), request.POST.get('hint3')]
+#         for hint_text in hint_texts:
+#             if hint_text:
+#                 hint = Hint(hint_string=hint_text, puzzle_id=puzzle_id)
+#                 hint.save()
+#         return HttpResponseRedirect(reverse("detail_puzzle", args=(hunt_id,puzzle_id)))
+#     return HttpResponseRedirect(reverse("detail_puzzle", args=(hunt_id,puzzle_id)))
+# >>>>>>> main
 
 def submit_puzzle(request, hunt_id):
     r = request.POST.get("radius")
