@@ -168,7 +168,9 @@ def approve_hunt(request, hunt_id):
 
 def deny_hunt(request, hunt_id):
     hunt = Hunt.objects.get(pk=hunt_id)
-    hunt.delete()
+    hunt.submitted = False
+    hunt.comments = "This has been denied"
+    hunt.save()
 
     return HttpResponseRedirect(reverse("dashboard"))
 

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load socialaccount %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block content %}
+
+<head>
+  <link rel="stylesheet" href="{% static 'puzzle/css/splash_screen.css' %}" />
+</head>
+<div class="container mx-3 my-3 text-center">
+  <div class="container text-center bg-white shadow  bg-white rounded py-3 w-50">
+    <h3>{{ hunt.title }}</h3>
+    <p>{{ hunt.summary}}</p>
+    <a class="btn btn-success" href="{% url 'play_hunt' hunt.id %}">Deny</a>
+    <a class="btn btn-danger" href="{% url 'dashboard' %}">Go Back</a>
+  </div>
+</div>
+
+{% endblock %}
