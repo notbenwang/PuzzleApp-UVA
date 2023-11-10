@@ -392,6 +392,12 @@ def set_admin(request):
     return HttpResponseRedirect(reverse("admin_settings"))
 
 
+def my_hunts(request):
+    creator = CustomUser.objects.get(social_id=request.user.id)
+    hunts = Hunt.objects.filter(creator=creator)
+
+    return render(request, "my_hunts.html", {"hunts": hunts})
+
 
 # Resource
 # URL: https://stackoverflow.com/questions/17813919/django-error-matching-query-does-not-exist
