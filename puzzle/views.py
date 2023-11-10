@@ -3,8 +3,9 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.views import generic
 from allauth.socialaccount.models import SocialAccount
-from .models import Puzzle, Hunt, Hint
-import json
+from django.contrib.auth.models import User
+from .models import Puzzle, Hunt, Hint, Session, Guess
+import math
 
 from .models import CustomUser
 
@@ -48,9 +49,15 @@ def create_custom_user(request):
             custom_user = CustomUser(social_id=social_id, is_admin=False)
             custom_user.save()
             is_admin = False
+    return custom_user
+
 
 def index(request):
-    return HttpResponse("You are at the puzzle index")
+    if request.user.id:
+        return HttpResponseRedirect(reverse("dashboard"))
+    else:
+        return HttpResponseRedirect("accounts/google/login")
+
 
 def add_temp_hunt(request, hunt_id):
     create_custom_user(request)
@@ -120,21 +127,46 @@ def submit_edited_puzzle(request, puzzle_id):
 
     p.save()
     return HttpResponseRedirect(reverse("add_temp_hunt", args=(p.hunt_id.id,)))
+# =======
+# def submit_hint(request, hunt_id, puzzle_id):
+#     p = Puzzle.objects.get(pk=hunt_id)
+#     if request.method == "POST":
+#         hint_texts = [request.POST.get('hint1'), request.POST.get('hint2'), request.POST.get('hint3')]
+#         for hint_text in hint_texts:
+#             if hint_text:
+#                 hint = Hint(hint_string=hint_text, puzzle_id=puzzle_id)
+#                 hint.save()
+#         return HttpResponseRedirect(reverse("detail_puzzle", args=(hunt_id,puzzle_id)))
+#     return HttpResponseRedirect(reverse("detail_puzzle", args=(hunt_id,puzzle_id)))
+# >>>>>>> main
 
 def submit_puzzle(request, hunt_id):
     r = request.POST.get("radius")
     latLng = request.POST.get("latLng")
-    arr = latLng[1:-1].split(", ")
-
+    prompt = request.POST.get("prompt")
+    hints = []
+    for i in range(1,5):
+        text = request.POST.get(f"hint{i}")
+        if text is not None:
+            hints.append(text)
     h = Hunt.objects.get(pk=hunt_id)
+    arr = latLng[1:-1].split(", ")
     # Should change "test" to some Post object
-    p = Puzzle(prompt_text="test",hunt_id=h, radius=r,long=float(arr[1]), lat=float(arr[0]))
+    size = len(Puzzle.objects.filter(hunt_id=hunt_id))
+    p = Puzzle(prompt_text=prompt,hunt_id=h, radius=r,long=float(arr[1]), lat=float(arr[0]), order=size)
     p.save()
+    for hint_text in hints:
+        hint = Hint(hint_string=hint_text, puzzle_id=p)
+        hint.save()
     return HttpResponseRedirect(reverse("add_temp_hunt", args=(h.id,)))
 
 def submit_hunt(request, hunt_id):
     h = Hunt.objects.get(pk=hunt_id)
+    title = request.POST.get("title")
+    summary = request.POST.get("summary")
     h.submitted = True
+    h.title = title
+    h.summary = summary
     h.save()
     return HttpResponseRedirect(reverse("dashboard"))
 
@@ -180,7 +212,7 @@ def dashboard(request):
         admin_authors = list(map(lambda x: x.creator, admin_queue))
         admin_authors = list(map(get_user, admin_authors))
         zipped_admin = zip(admin_queue, admin_authors)
-
+        
     return render(request, "dashboard.html", {"is_admin": is_admin, "zipped_hunts": zipped_hunts, "zipped_admin": zipped_admin})
 
 def approve_hunt(request, hunt_id):
@@ -195,6 +227,165 @@ def deny_hunt(request, hunt_id):
     hunt.delete()
 
     return HttpResponseRedirect(reverse("dashboard"))
+
+def get_session(request, hunt_id):
+    user = create_custom_user(request)
+    h = Hunt.objects.get(pk=hunt_id)
+    try:
+        session = Session.objects.get(player=user, hunt_id = h)
+    except Session.DoesNotExist:
+        session = Session(player=user, hunt=h)
+        session.save()
+    return session
+
+def play_hunt(request, hunt_id):
+    session = get_session(request, hunt_id)
+    if session.completed:
+        order = session.current_puzzle
+        return render(request, "hunt_results.html", {"hunt_id":hunt_id, "score":session.total_score, "hints":session.total_hints_used, "possible_score":(order-1)*5000})
+    elif session.finished_puzzle:
+        return HttpResponseRedirect(reverse("get_puzzle_result", kwargs={"hunt_id":hunt_id, "session_id":session.id}))
+    else:
+        return HttpResponseRedirect(reverse("play_puzzle", kwargs={"hunt_id":hunt_id, "session_id" : session.id}))
+
+def reset_session(request, hunt_id):
+    session = get_session(request=request, hunt_id=hunt_id)
+    if session.completed:
+        session.delete()
+        return HttpResponseRedirect(reverse("play_hunt", kwargs={"hunt_id":hunt_id}))
+    
+
+def play_puzzle(request, hunt_id, session_id):
+    session = Session.objects.get(pk=session_id)
+    h = Hunt.objects.get(pk=hunt_id)
+    order = session.current_puzzle
+    session.finished_puzzle = False
+    session.save()
+    hint_amount = session.current_hints_used
+    p = Puzzle.objects.filter(order = order, hunt_id = h)
+    hints = Hint.objects.filter(puzzle_id = p.first())
+    return render(request, "play_puzzle.html", {"puzzles": p, 
+                                                "prompt": p.first().prompt_text, 
+                                                "hints":hints[0:hint_amount], 
+                                                "hint_amount":hint_amount, 
+                                                "order":order, "hunt":h,
+                                                "session_id":session.id })
+
+def request_hint(request, hunt_id, session_id):
+    session = Session.objects.get(pk=session_id)
+    h = Hunt.objects.get(pk=hunt_id)
+    order = session.current_puzzle
+    hint_amount = session.current_hints_used
+    p = Puzzle.objects.filter(order = order, hunt_id = h)
+    hints = Hint.objects.filter(puzzle_id = p.first())
+    if hint_amount < len(hints):
+        session.current_hints_used += 1
+        session.total_hints_used += 1
+        session.save()
+    return HttpResponseRedirect(reverse("play_puzzle", kwargs={"hunt_id":hunt_id, "session_id" : session.id}))
+
+def get_puzzle_result(request, hunt_id, session_id):
+    session = Session.objects.get(pk=session_id)
+    order = session.current_puzzle
+    hint_amount = session.current_hints_used
+    hunt = Hunt.objects.get(pk=hunt_id)
+    
+    if session.finished_puzzle:
+        puzzle = Puzzle.objects.filter(order = order-1, hunt_id = hunt).first()
+        guesses = Guess.objects.filter(session = session, order = order-1)
+    else:
+        puzzle = Puzzle.objects.filter(order = order, hunt_id = hunt).first()
+        guesses = Guess.objects.filter(session = session, order = order)
+    
+    if len(guesses) > 0:
+        guess = guesses.first()
+        guess_lat = guess.lat
+        guess_lng = guess.long
+    else:
+        latLng = request.POST.get("latLng")
+        arr = latLng[1:-1].split(", ")
+        guess_lat = float(arr[0])
+        guess_lng = float(arr[1])
+        guess = Guess(session=session, order=order, lat = guess_lat, long =guess_lng)
+        guess.save()
+
+    lat = puzzle.lat
+    lng = puzzle.long
+    radius = puzzle.radius
+    radius_feet = radius * 4.07585 # Magic number
+
+    diff_lat = guess_lat - lat
+    diff_lng = guess_lng - lng
+    distance = math.sqrt(pow(diff_lat,2) + pow(diff_lng,2)) * 364000 # Magic numbers
+    if distance < radius_feet:
+        distance = 0
+    else:
+        distance -= radius_feet
+    miles = distance / 5280
+    score = 5000 - 100 * (distance/radius_feet) - 500 * (hint_amount)
+    score = int(round(score/50, 0) * 50)
+    if score <= 0:
+        score = 0
+   
+    if not session.finished_puzzle:
+        session.total_score += score
+        session.current_hints_used = 0
+        session.current_puzzle += 1
+    session.finished_puzzle = True
+    session.save()
+    return render(request, "play_puzzle_result.html", {"distance":round(distance, 4), "miles":round(miles, 4), 
+                                                       "hunt_id" : hunt_id, "order" : order,
+                                                       "lat": lat, "lng": lng, "guess_lat":guess_lat, "guess_lng":guess_lng, "radius":radius,
+                                                       "session_id" : session_id, "score": score})
+
+def go_next_puzzle(request, hunt_id, session_id):
+    hunt = Hunt.objects.get(pk=hunt_id)
+    session = Session.objects.get(pk=session_id)
+    order = session.current_puzzle
+    puzzles = Puzzle.objects.filter(hunt_id=hunt)
+    if (order < len(puzzles)):
+        return HttpResponseRedirect(reverse("play_puzzle", kwargs={"hunt_id":hunt_id, "session_id" : session.id}))
+    else:
+        session.completed = True
+        session.save()
+        return render(request, "hunt_results.html", {"hunt_id":hunt_id, "score":session.total_score, "hints":session.total_hints_used, "possible_score":(order-1)*5000})
+
+
+def get_social_user(custom_user):
+    try:
+        social_user = User.objects.get(pk=custom_user.social_id)
+        return social_user
+    except User.DoesNotExist:
+        return None
+
+def admin_view(request):
+    social_id = request.user.id
+    custom_user = CustomUser.objects.get(social_id=social_id)
+    is_admin = custom_user.is_admin
+
+    users = CustomUser.objects.all()
+
+
+
+    social_users = list(map(get_social_user, users))
+    user_zip = zip(users, social_users)
+    user_zip = list(filter(lambda x: x[1] and x[1].email, user_zip))
+
+    return render(request, "admin.html", {"is_admin": is_admin, "user_zip": user_zip})
+
+
+
+def set_admin(request):
+    users = CustomUser.objects.all()
+
+    for user in users:
+        should_be_admin = request.POST.get("admin_" + str(user.social_id)) != None
+        setattr(user, 'is_admin', should_be_admin)
+        user.save()
+
+    return HttpResponseRedirect(reverse("admin_settings"))
+
+
 
 # Resource
 # URL: https://stackoverflow.com/questions/17813919/django-error-matching-query-does-not-exist
@@ -213,4 +404,10 @@ def deny_hunt(request, hunt_id):
 # Name: Mermoz
 # Date: Nov 21 2010
 # Used to learn to zip lists to deliver mappings to view
+
+# Resource
+# URL: https://stackoverflow.com/questions/1545645/how-to-set-django-model-field-by-name
+# Name: Paul McMillan
+# Date: 0ct 9 2009
+# Used to learn how to set attributes in model
 
