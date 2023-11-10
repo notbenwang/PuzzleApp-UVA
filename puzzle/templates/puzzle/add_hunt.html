@@ -10,10 +10,18 @@
 </head>
 <div class="container mx-3 my-3 text-center">
       <div class="container text-center bg-white shadow p-1 mb-2 mt-2 bg-white rounded py-3 w-50">
-    
+
     <form action="{% url 'submit_hunt' hunt.id %}" method="post" onsubmit="return validateForm()">
       {% csrf_token %}
       <h3 class="text-dark">Add A Hunt</h3>
+        {% if hunt.comments %}
+        <div class="p-2 mb-2 bg-warning">
+            <h5>Feedback</h5>
+          <p >
+              {{ hunt.comments }}
+          </p>
+            </div>
+        {% endif %}
       <p>
         <label>Title:</label>
         <input type="text" class="title" name = "title" id = "title" placeholder="Give me an awesome title!"
