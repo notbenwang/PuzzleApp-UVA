@@ -1,0 +1,48 @@
+<!--Learned format for passing url parameters
+URL: https://stackoverflow.com/questions/65379988/django-how-to-pass-multiple-parameters-to-url
+-->
+
+<!--Gear SVG Icon from
+URL: https://github.com/twbs/icons
+License: MIT
+Author: Bootstrap contributors
+-->
+
+{% extends "base.html" %}
+{% load socialaccount %}
+{% load static %}
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block content %}
+<head>
+  <link rel="stylesheet" href="{% static 'puzzle/css/splash_screen.css' %}" />
+</head>
+<div class="container text-center">
+    <h2 class="text-light">My Hunts </h2>
+    {% for hunt in hunts %}
+        <div class="container-large mt-2" style="max-width: 500px; margin: auto;">
+            {% if not hunt.approved %}
+                <a href="{% url 'add_temp_hunt' hunt_id=hunt.id %}" class="item-button">
+                    {% else %}
+                    <a href="{% url 'view_hunt' hunt_id=hunt.id %}" class="item-button">
+                    {% endif %}
+
+                    <div class="container text-center bg-white shadow  rounded py-2 btn">
+                        <h5>{{ hunt.title }}</h5>
+                        <i>{{ hunt.summary }}</i>
+
+                        {% if not hunt.approved %}
+                            <p class="p-2 mt-2" style="border: 1px solid #000000; border-radius:
+                            6px 6px 6px 6px; background-color: #f0f0f0;">
+                                <strong>Draft</strong>
+                            </p>
+                        {% endif %}
+                    </div>
+                </a>
+            </div>
+    {% endfor %}
+</div>
+{% endblock %}
+
