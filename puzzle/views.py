@@ -146,7 +146,6 @@ def submit_puzzle(request, hunt_id):
             hints.append(text)
     h = Hunt.objects.get(pk=hunt_id)
     arr = latLng[1:-1].split(", ")
-    # Should change "test" to some Post object
     size = len(Puzzle.objects.filter(hunt_id=hunt_id))
     p = Puzzle(prompt_text=prompt,hunt_id=h, radius=r,long=float(arr[1]), lat=float(arr[0]), order=size)
     p.save()
@@ -174,7 +173,6 @@ def login(request):
 
 def dashboard(request):
     social_id = request.user.id
-
     try:
         custom_user = CustomUser.objects.get(social_id=social_id)
         is_admin = custom_user.is_admin
@@ -243,7 +241,8 @@ def play_hunt(request, hunt_id):
     session = get_session(request, hunt_id)
     if session.completed:
         order = session.current_puzzle
-        return render(request, "hunt_results.html", {"hunt_id":hunt_id, "score":session.total_score, "hints":session.total_hints_used, "possible_score":(order-1)*5000})
+        return render(request, "hunt_results.html", {"hunt_id":hunt_id, "score":session.total_score, 
+                                                     "hints":session.total_hints_used, "possible_score":(order-1)*5000})
     elif session.finished_puzzle:
         return HttpResponseRedirect(reverse("get_puzzle_result", kwargs={"hunt_id":hunt_id, "session_id":session.id}))
     else:
@@ -349,7 +348,8 @@ def go_next_puzzle(request, hunt_id, session_id):
     else:
         session.completed = True
         session.save()
-        return render(request, "hunt_results.html", {"hunt_id":hunt_id, "score":session.total_score, "hints":session.total_hints_used, "possible_score":(order-1)*5000})
+        return render(request, "hunt_results.html", {"hunt_id":hunt_id, "score":session.total_score, 
+                                                     "hints":session.total_hints_used, "possible_score":(order-1)*5000})
 
 
 def get_social_user(custom_user):
@@ -365,8 +365,6 @@ def admin_view(request):
     is_admin = custom_user.is_admin
 
     users = CustomUser.objects.all()
-
-
 
     social_users = list(map(get_social_user, users))
     user_zip = zip(users, social_users)
