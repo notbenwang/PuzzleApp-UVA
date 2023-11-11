@@ -113,33 +113,28 @@ def submit_edited_puzzle(request, puzzle_id):
             hint.save()
             i+=1
 
-        # for i in range(len(hint_texts)):
-        #     hint_text = hint_texts[i]
-        #     if hint_text:
-        #         hint = Hint(hint_string=hint_text, puzzle_id=p)
-        #         hint.save()
-        # return HttpResponseRedirect(reverse("detail_puzzle", args=(hunt_id,puzzle_id)))
-    # Should change "test" to some Post object
     p.prompt_text = prompt
     p.radius = r
-    
-    # p = Puzzle(prompt_text="test",hunt_id=h, radius=r,long=float(arr[1]), lat=float(arr[0]))
-
     p.save()
     return HttpResponseRedirect(reverse("add_temp_hunt", args=(p.hunt_id.id,)))
-# =======
-# def submit_hint(request, hunt_id, puzzle_id):
-#     p = Puzzle.objects.get(pk=hunt_id)
-#     if request.method == "POST":
-#         hint_texts = [request.POST.get('hint1'), request.POST.get('hint2'), request.POST.get('hint3')]
-#         for hint_text in hint_texts:
-#             if hint_text:
-#                 hint = Hint(hint_string=hint_text, puzzle_id=puzzle_id)
-#                 hint.save()
-#         return HttpResponseRedirect(reverse("detail_puzzle", args=(hunt_id,puzzle_id)))
-#     return HttpResponseRedirect(reverse("detail_puzzle", args=(hunt_id,puzzle_id)))
-# >>>>>>> main
 
+def delete_puzzle(request, hunt_id, puzzle_id):
+    hunt = Hunt.objects.get(pk=hunt_id)
+    puzzles = Puzzle.objects.filter(hunt_id = hunt)
+    p = Puzzle.objects.get(pk=puzzle_id)
+    p_order = p.order
+
+    found = False
+    for puzzle in puzzles:
+        order = puzzle.order
+        if found:
+            puzzle.order -= 1
+            puzzle.save()
+        elif order == p_order:
+            found = True
+            p.delete()
+    return HttpResponseRedirect(reverse("add_temp_hunt", args=(p.hunt_id.id,)))
+    
 def submit_puzzle(request, hunt_id):
     r = request.POST.get("radius")
     latLng = request.POST.get("latLng")
