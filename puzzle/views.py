@@ -95,23 +95,29 @@ def submit_edited_puzzle(request, puzzle_id):
         p.long = float(arr[1])
     prompt = request.POST.get("prompt")
     
+    hint_texts = []
     if request.method == "POST":
-        hint_texts = [request.POST.get('hint1'), request.POST.get('hint2'), request.POST.get('hint3'),request.POST.get('hint4')]
+        for i in range(1,5):
+            text = request.POST.get(f"hint{i}")
+            if text is not None:
+                hint_texts.append(text)
         hints = Hint.objects.filter(puzzle_id=p)
         
         i = 0
         for hint in hints:
-            if hint_texts[i]:
-                hint.hint_string = hint_texts[i]
-                hint.save()
+            if i < len(hint_texts):
+                if hint_texts[i]:
+                    hint.hint_string = hint_texts[i]
+                    hint.save()
             else:
                 hint.delete()
             i += 1
 
-        while hint_texts[i]:
-            hint = Hint(hint_string=hint_texts[i], puzzle_id=p)
-            hint.save()
-            i+=1
+        while i < len(hint_texts):
+            if hint_texts[i]:
+                hint = Hint(hint_string=hint_texts[i], puzzle_id=p)
+                hint.save()
+                i+=1
 
     p.prompt_text = prompt
     p.radius = r
