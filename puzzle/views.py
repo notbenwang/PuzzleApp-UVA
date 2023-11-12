@@ -328,7 +328,7 @@ def get_puzzle_result(request, hunt_id, session_id):
     else:
         distance -= radius_feet
     miles = distance / 5280
-    score = 5000 - 100 * (distance/radius_feet) - 500 * (hint_amount)
+    score = 5000 - (10*distance) - 500 * (hint_amount)
     score = int(round(score/50, 0) * 50)
     if score <= 0:
         score = 0
@@ -355,7 +355,7 @@ def go_next_puzzle(request, hunt_id, session_id):
         session.completed = True
         session.save()
         return render(request, "hunt_results.html", {"hunt_id":hunt_id, "score":session.total_score, 
-                                                     "hints":session.total_hints_used, "possible_score":(order-1)*5000})
+                                                     "hints":session.total_hints_used, "possible_score":(order)*5000})
 
 
 def get_social_user(custom_user):

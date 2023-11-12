@@ -154,7 +154,7 @@
                     });
                     for (i=1; i<x; i++){
                         value = document.getElementById("h"+(i+1)).value;
-                        $(wrapper).append(`<p><div><input type="text" id="hint${x}" name="hint${x}" style = "width:400px;" value="${value}"/><a href="#" class="delete">  Delete</a></div></p>`);
+                        $(wrapper).append(`<p><div><input type="text" id="hint${i+1}" name="hint${i+1}" style = "width:400px;" value="${value}"/><a href="#" class="delete">  Delete</a></div></p>`);
                     }
                     $(wrapper).on("click", ".delete", function(e) {
                         e.preventDefault();
