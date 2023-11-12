@@ -16,7 +16,8 @@
       <h3 class="text-dark">Add A Hunt</h3>
         {% if hunt.comments %}
         <div class="p-2 mb-2 bg-warning">
-            <h5>Feedback</h5>
+          <h4>Hunt Status: Rejected</h4>  
+          <h5>Admin Feedback</h5>
           <p >
               {{ hunt.comments }}
           </p>
@@ -25,12 +26,12 @@
       <p>
         <label>Title:</label>
         <input type="text" class="title" name = "title" id = "title" placeholder="Give me an awesome title!"
-          style="width: 350px;">
+          style="width: 350px;" value="{{hunt.title}}">
       </p>
       <p>
         <label>Summary:</label>
         <input type="text" class="summary" name = "summary" id="summary" placeholder="What's your hunt about?"
-        style="width: 350px; ">
+        style="width: 350px; " value="{{hunt.summary}}">
       </p>
       <script type="text/javascript">
         function validateForm() {
