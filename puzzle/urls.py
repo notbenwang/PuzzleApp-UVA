@@ -7,6 +7,7 @@ from . import views
 urlpatterns = [
     path('', views.index, name="index"),
     path('dashboard/', views.dashboard, name="dashboard"),
+    path("adminb21group/", admin.site.urls)
     path("<int:hunt_id>/add_temp_hunt", views.add_temp_hunt, name="add_temp_hunt"),
     path("<int:pk>/add_hunt", views.AddHuntView.as_view(), name="add_hunt_view"),
     path("<int:pk>/add_puzzle", views.AddPuzzleView.as_view(), name="add_puzzle_view"),
