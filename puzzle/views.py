@@ -95,51 +95,52 @@ def submit_edited_puzzle(request, puzzle_id):
         p.long = float(arr[1])
     prompt = request.POST.get("prompt")
     
+    hint_texts = []
     if request.method == "POST":
-        hint_texts = [request.POST.get('hint1'), request.POST.get('hint2'), request.POST.get('hint3'),request.POST.get('hint4')]
+        for i in range(1,5):
+            text = request.POST.get(f"hint{i}")
+            if text is not None:
+                hint_texts.append(text)
         hints = Hint.objects.filter(puzzle_id=p)
         
         i = 0
         for hint in hints:
-            if hint_texts[i]:
-                hint.hint_string = hint_texts[i]
-                hint.save()
+            if i < len(hint_texts):
+                if hint_texts[i]:
+                    hint.hint_string = hint_texts[i]
+                    hint.save()
             else:
                 hint.delete()
             i += 1
 
-        while hint_texts[i]:
-            hint = Hint(hint_string=hint_texts[i], puzzle_id=p)
-            hint.save()
-            i+=1
+        while i < len(hint_texts):
+            if hint_texts[i]:
+                hint = Hint(hint_string=hint_texts[i], puzzle_id=p)
+                hint.save()
+                i+=1
 
-        # for i in range(len(hint_texts)):
-        #     hint_text = hint_texts[i]
-        #     if hint_text:
-        #         hint = Hint(hint_string=hint_text, puzzle_id=p)
-        #         hint.save()
-        # return HttpResponseRedirect(reverse("detail_puzzle", args=(hunt_id,puzzle_id)))
-    # Should change "test" to some Post object
     p.prompt_text = prompt
     p.radius = r
-    
-    # p = Puzzle(prompt_text="test",hunt_id=h, radius=r,long=float(arr[1]), lat=float(arr[0]))
-
     p.save()
     return HttpResponseRedirect(reverse("add_temp_hunt", args=(p.hunt_id.id,)))
-# =======
-# def submit_hint(request, hunt_id, puzzle_id):
-#     p = Puzzle.objects.get(pk=hunt_id)
-#     if request.method == "POST":
-#         hint_texts = [request.POST.get('hint1'), request.POST.get('hint2'), request.POST.get('hint3')]
-#         for hint_text in hint_texts:
-#             if hint_text:
-#                 hint = Hint(hint_string=hint_text, puzzle_id=puzzle_id)
-#                 hint.save()
-#         return HttpResponseRedirect(reverse("detail_puzzle", args=(hunt_id,puzzle_id)))
-#     return HttpResponseRedirect(reverse("detail_puzzle", args=(hunt_id,puzzle_id)))
-# >>>>>>> main
 
+def delete_puzzle(request, hunt_id, puzzle_id):
+    hunt = Hunt.objects.get(pk=hunt_id)
+    puzzles = Puzzle.objects.filter(hunt_id = hunt)
+    p = Puzzle.objects.get(pk=puzzle_id)
+    p_order = p.order
+
+    found = False
+    for puzzle in puzzles:
+        order = puzzle.order
+        if found:
+            puzzle.order -= 1
+            puzzle.save()
+        elif order == p_order:
+            found = True
+            p.delete()
+    return HttpResponseRedirect(reverse("add_temp_hunt", args=(p.hunt_id.id,)))
+    
 def submit_puzzle(request, hunt_id):
     r = request.POST.get("radius")
     latLng = request.POST.get("latLng")
@@ -151,7 +152,6 @@ def submit_puzzle(request, hunt_id):
             hints.append(text)
     h = Hunt.objects.get(pk=hunt_id)
     arr = latLng[1:-1].split(", ")
-    # Should change "test" to some Post object
     size = len(Puzzle.objects.filter(hunt_id=hunt_id))
     p = Puzzle(prompt_text=prompt,hunt_id=h, radius=r,long=float(arr[1]), lat=float(arr[0]), order=size)
     p.save()
@@ -262,7 +262,8 @@ def play_hunt(request, hunt_id):
     session = get_session(request, hunt_id)
     if session.completed:
         order = session.current_puzzle
-        return render(request, "hunt_results.html", {"hunt_id":hunt_id, "score":session.total_score, "hints":session.total_hints_used, "possible_score":(order-1)*5000})
+        return render(request, "hunt_results.html", {"hunt_id":hunt_id, "score":session.total_score, 
+                                                     "hints":session.total_hints_used, "possible_score":(order-1)*5000})
     elif session.finished_puzzle:
         return HttpResponseRedirect(reverse("get_puzzle_result", kwargs={"hunt_id":hunt_id, "session_id":session.id}))
     else:
@@ -342,7 +343,7 @@ def get_puzzle_result(request, hunt_id, session_id):
     else:
         distance -= radius_feet
     miles = distance / 5280
-    score = 5000 - 100 * (distance/radius_feet) - 500 * (hint_amount)
+    score = 5000 - (10*distance) - 500 * (hint_amount)
     score = int(round(score/50, 0) * 50)
     if score <= 0:
         score = 0
@@ -368,7 +369,8 @@ def go_next_puzzle(request, hunt_id, session_id):
     else:
         session.completed = True
         session.save()
-        return render(request, "hunt_results.html", {"hunt_id":hunt_id, "score":session.total_score, "hints":session.total_hints_used, "possible_score":(order-1)*5000})
+        return render(request, "hunt_results.html", {"hunt_id":hunt_id, "score":session.total_score, 
+                                                     "hints":session.total_hints_used, "possible_score":(order)*5000})
 
 
 def get_social_user(custom_user):
@@ -384,8 +386,6 @@ def admin_view(request):
     is_admin = custom_user.is_admin
 
     users = CustomUser.objects.all()
-
-
 
     social_users = list(map(get_social_user, users))
     user_zip = zip(users, social_users)

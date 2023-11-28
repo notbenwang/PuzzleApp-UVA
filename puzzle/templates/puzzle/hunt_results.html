@@ -16,7 +16,8 @@
 <div class="container text-center bg-white shadow mt-2 p-1 w-50 rounded">
 
 <h4>Your overall score was: {{score}}</h4>
-<p>You used a total of {{hints}} hints.</p>
+<p>For context, the highest score possible was: {{possible_score}}</p>
+<p>You used a total of {{hints}} hints (each hint results in 500 point deduction)!</p>
 
 <a href = "{% url 'reset_session' hunt_id %}"class="btn btn-success mb-2">Replay</a>
 <a href= "{% url 'dashboard' %}" class="btn btn-success mb-2">Go back</a>

@@ -14,11 +14,22 @@
   <div class="container text-center bg-white shadow  bg-white rounded py-3 w-50">
     <h3>{{ hunt.title }}</h3>
     <p>{{ hunt.summary}}</p>
-    <form action="{% url 'deny_hunt' hunt.id %}" method="post">
+    <form action="{% url 'deny_hunt' hunt.id %}" method="post" onsubmit="return validateForm()">
       {% csrf_token %}
+      <script type="text/javascript">
+        function validateForm() {
+          const feedback = document.getElementById("feedback").value;
+          
+          if (feedback == null || feedback == "") {
+            alert("Please add some feedback before you deny a puzzle.");
+            return false;
+          }
+          
+        }
+      </script>
         <textarea placeholder="Your feedback..."
                   style="max-height: 150px; min-height: 150px;"
-                  name="comments"></textarea>
+                  name="comments" id="feedback"></textarea>
           <br/>
         <button class="btn btn-success mt-2">Deny</button>
         <a class="btn btn-danger mt-2" href="{% url 'dashboard' %}">Go Back</a>

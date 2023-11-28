@@ -1,6 +1,7 @@
 from django.contrib.auth.views import LogoutView
 from django.urls import path, include
 from django.views.generic import TemplateView
+from django.contrib import admin
 
 from . import views
 
@@ -12,12 +13,10 @@ urlpatterns = [
     path("<int:pk>/add_puzzle", views.AddPuzzleView.as_view(), name="add_puzzle_view"),
     path("<int:hunt_id>/submit_puzzle", views.submit_puzzle, name="submit_puzzle"),
     path("<int:puzzle_id>/submit_edited_puzzle", views.submit_edited_puzzle, name="submit_edited_puzzle"),
-    # path("<int:pk>/puzzle/<int:puzzle_id>", views.DetailPuzzleView.as_view(), name="detail_puzzle"),
+    path("<int:hunt_id>/puzzle/<int:puzzle_id>/delete", views.delete_puzzle, name="delete_puzzle"),
     path("<int:hunt_id>/puzzle/<int:puzzle_id>", views.get_detail_puzzle, name="detail_puzzle"),
     path("<int:hunt_id>/submit_hunt", views.submit_hunt, name="submit_hunt"),
     path("<int:hunt_id>/hunt", views.view_hunt, name="view_hunt"),
-    # path("<int:pk>/add_hint/<int:puzzle_id>", views.AddHintView.as_view(), name="add_hint_view"),
-    # path("<int:pk>/puzzle/<int:puzzle_id>/submit_hint", viewSs.submit_hint, name="submit_hint"),
     path("<int:hunt_id>/approve/hunt", views.approve_hunt, name="approve_hunt"),
     path("<int:hunt_id>/view/deny", views.view_deny, name="view_deny"),
     path("<int:hunt_id>/deny/hunt", views.deny_hunt, name="deny_hunt"),
