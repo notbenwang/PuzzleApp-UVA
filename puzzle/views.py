@@ -179,6 +179,8 @@ def login(request):
 
 def dashboard(request):
     social_id = request.user.id
+    if not social_id:
+        return HttpResponseRedirect(reverse("index"))
 
     try:
         custom_user = CustomUser.objects.get(social_id=social_id)
@@ -223,16 +225,28 @@ def approve_hunt(request, hunt_id):
     return HttpResponseRedirect(reverse("dashboard"))
 
 def deny_hunt(request, hunt_id):
-    hunt = Hunt.objects.get(pk=hunt_id)
-    hunt.submitted = False
-    hunt.comments = request.POST.get("comments")
-    hunt.save()
+    social_id = request.user.id
+    custom_user = CustomUser.objects.get(social_id=social_id)
+    is_admin = custom_user.is_admin
+
+    if is_admin:
+        hunt = Hunt.objects.get(pk=hunt_id)
+        hunt.submitted = False
+        hunt.comments = request.POST.get("comments")
+        hunt.save()
 
     return HttpResponseRedirect(reverse("dashboard"))
 
 def view_deny(request, hunt_id):
-    hunt = Hunt.objects.get(pk=hunt_id)
-    return render(request, "deny_hunt.html", {"hunt": hunt})
+    social_id = request.user.id
+    custom_user = CustomUser.objects.get(social_id=social_id)
+    is_admin = custom_user.is_admin
+
+    if is_admin:
+        hunt = Hunt.objects.get(pk=hunt_id)
+        return render(request, "deny_hunt.html", {"hunt": hunt})
+    else:
+        return HttpResponseRedirect(reverse("dashboard"))
 
 def get_session(request, hunt_id):
     user = create_custom_user(request)
