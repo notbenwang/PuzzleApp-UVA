@@ -199,7 +199,7 @@ def dashboard(request):
     def get_user(custom_user):
         try:
             if custom_user:
-                return SocialAccount.objects.get(pk=custom_user.social_id)
+                return SocialAccount.objects.get(pk=custom_user.social_id-1)
             else:
                 return None
         except SocialAccount.DoesNotExist:
