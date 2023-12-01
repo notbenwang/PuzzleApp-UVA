@@ -1,3 +1,28 @@
+# Resource
+# URL: https://stackoverflow.com/questions/17813919/django-error-matching-query-does-not-exist
+# Name: Dracontis
+# Date: June 7 2015
+# Used to figure out how to handle user not exist exception
+
+#Resource
+# URL: https://stackoverflow.com/questions/39944474/django-get-the-max-pk
+# Name: CodeTherapy
+# Date: Oct 31 2021
+# Used to figure out how to get latest obejct by pk
+
+#Resource
+# URL: https://stackoverflow.com/questions/2415865/iterating-through-two-lists-in-django-templates
+# Name: Mermoz
+# Date: Nov 21 2010
+# Used to learn to zip lists to deliver mappings to view
+
+# Resource
+# URL: https://stackoverflow.com/questions/1545645/how-to-set-django-model-field-by-name
+# Name: Paul McMillan
+# Date: 0ct 9 2009
+# Used to learn how to set attributes in model
+
+
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
@@ -413,27 +438,5 @@ def my_hunts(request):
     return render(request, "my_hunts.html", {"hunts": hunts})
 
 
-# Resource
-# URL: https://stackoverflow.com/questions/17813919/django-error-matching-query-does-not-exist
-# Name: Dracontis
-# Date: June 7 2015
-# Used to figure out how to handle user not exist exception
 
-#Resource
-# URL: https://stackoverflow.com/questions/39944474/django-get-the-max-pk
-# Name: CodeTherapy
-# Date: Oct 31 2021
-# Used to figure out how to get latest obejct by pk
-
-#Resource
-# URL: https://stackoverflow.com/questions/2415865/iterating-through-two-lists-in-django-templates
-# Name: Mermoz
-# Date: Nov 21 2010
-# Used to learn to zip lists to deliver mappings to view
-
-# Resource
-# URL: https://stackoverflow.com/questions/1545645/how-to-set-django-model-field-by-name
-# Name: Paul McMillan
-# Date: 0ct 9 2009
-# Used to learn how to set attributes in model
 
