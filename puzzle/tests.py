@@ -1,3 +1,8 @@
+# Code for creating mock account in set up from
+# URL: https://stackoverflow.com/questions/27841101/can-not-log-in-with-unit-test-in-django-allauth
+# Name: micgeronomo
+# Date: Jan 8 2015
+
 from django.test import TestCase, override_settings
 from django.contrib.auth import get_user_model
 
