@@ -109,6 +109,64 @@ class SessionModelTest(TestCase):
         self.assertEqual(session.total_hints_used, 2)
         self.assertEqual(session.total_score, 0)
         self.assertFalse(session.finished_puzzle)
+
+class GuessModelTest(TestCase):
+    def setUp(self):
+        self.user = CustomUser.objects.create(social_id=123, is_admin=True)
+        self.test_hunt = Hunt.objects.create(
+            title="Hunt 1",
+            summary="This is a test hunt.",
+            approved=True,
+            submitted=True,
+            creator=self.user
+        )
+
+    def test_guess_creation(self):
+        puzzle = Puzzle.objects.create(
+            prompt_text="Rotunda",
+            hunt_id=self.test_hunt,
+            long=1.23,
+            lat=4.56,
+            radius=20,
+            order=1
+        )
+
+        session = Session.objects.create(
+            player=self.user,
+            hunt=self.test_hunt,
+            completed=False,
+            current_puzzle=1,
+            current_hints_used=0,
+            total_hints_used=0,
+            total_score=0,
+            finished_puzzle=False
+        )
+
+        guess = Guess.objects.create(
+            session=session,
+            order=1,
+            long=1.234,
+            lat=4.567
+        )
+
+        self.assertEqual(guess.session, session)
+        self.assertEqual(guess.order, 1)
+        self.assertEqual(guess.long, 1.234)
+        self.assertEqual(guess.lat, 4.567)
+
+        #correct guess
+        guess = Guess.objects.create(
+            session=session,
+            order=2,
+            long=1.000,
+            lat=4.500
+        )
+
+        self.assertEqual(guess.session, session)
+        self.assertFalse(guess.order, 1)
+        self.assertFalse(guess.long, 1.234)
+        self.assertFalse(guess.lat, 4.567)
+
     
 
     
