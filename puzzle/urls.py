@@ -29,7 +29,4 @@ urlpatterns = [
     path("admin_settings/", views.admin_view, name="admin_settings"),
     path("admin_settings/set_admin", views.set_admin, name="set_admin"),
     path("my_hunts", views.my_hunts, name="my_hunts")
-    # path('accounts/', include('allauth.urls')),
-    # path('logout', LogoutView.as_view()),
-    # path('accounts/google/login/', views.login, name='account_login'),
 ]
