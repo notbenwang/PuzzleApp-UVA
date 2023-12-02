@@ -72,6 +72,11 @@ class HuntModelTest(TestCase):
         self.assertEqual(puzzle.lat, 4.56)
         self.assertEqual(puzzle.radius, 20)
         self.assertEqual(puzzle.order, 1)
+
+        hint = Hint.objects.create(hint_string="Center of grounds", puzzle_id=puzzle)
+
+        self.assertEqual(hint.hint_string, "Center of grounds")
+        self.assertEqual(hint.puzzle_id, puzzle)
     
 
     
