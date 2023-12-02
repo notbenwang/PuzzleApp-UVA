@@ -77,6 +77,38 @@ class HuntModelTest(TestCase):
 
         self.assertEqual(hint.hint_string, "Center of grounds")
         self.assertEqual(hint.puzzle_id, puzzle)
+
+class SessionModelTest(TestCase):
+    def setUp(self):
+        self.user = CustomUser.objects.create(social_id=123, is_admin=True)
+        self.test_hunt = Hunt.objects.create(
+            title="Hunt 1",
+            summary="This is a test hunt.",
+            approved=True,
+            submitted=True,
+            creator=self.user
+        )
+
+    def test_session_creation(self):
+        session = Session.objects.create(
+            player=self.user,
+            hunt=self.test_hunt,
+            completed=False,
+            current_puzzle=1,
+            current_hints_used=2,
+            total_hints_used=2,
+            total_score=0,
+            finished_puzzle=False
+        )
+
+        self.assertEqual(session.player, self.user)
+        self.assertEqual(session.hunt, self.test_hunt)
+        self.assertFalse(session.completed)
+        self.assertEqual(session.current_puzzle, 1)
+        self.assertEqual(session.current_hints_used, 2)
+        self.assertEqual(session.total_hints_used, 2)
+        self.assertEqual(session.total_score, 0)
+        self.assertFalse(session.finished_puzzle)
     
 
     
