@@ -7,7 +7,7 @@ guess on a map. The scores are determined via proximity, similar to GeoGuessr. U
 own hunts and publish them for all to see, controlled by an administrator who can also leave feedback
 for puzzle creators.
 
-###Resources cited (also cited in files they are used in code)
+### Resources cited (also cited in files they are used in code)
 
 Code for creating mock account in set up from\
 URL: https://stackoverflow.com/questions/27841101/can-not-log-in-with-unit-test-in-django-allauth \
