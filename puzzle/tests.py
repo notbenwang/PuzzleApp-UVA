@@ -55,6 +55,23 @@ class HuntModelTest(TestCase):
         self.assertTrue(self.test_hunt.approved)
         self.assertTrue(self.test_hunt.submitted)
         self.assertEqual(self.test_hunt.creator, self.user)
+
+    def test_puzzle_creation(self):
+        puzzle = Puzzle.objects.create(
+            prompt_text = "Rotunda",
+            hunt_id = self.test_hunt,
+            long = 1.23,
+            lat = 4.56,
+            radius = 20,
+            order = 1
+        )
+
+        self.assertEqual(puzzle.prompt_text, "Rotunda")
+        self.assertEqual(puzzle.hunt_id, self.test_hunt)
+        self.assertEqual(puzzle.long, 1.23)
+        self.assertEqual(puzzle.lat, 4.56)
+        self.assertEqual(puzzle.radius, 20)
+        self.assertEqual(puzzle.order, 1)
     
 
     
