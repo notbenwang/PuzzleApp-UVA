@@ -8,6 +8,7 @@ own hunts and publish them for all to see, controlled by an administrator who ca
 for puzzle creators.
 
 ###Resources cited (also cited in files they are used in code)
+
 Code for creating mock account in set up from\
 URL: https://stackoverflow.com/questions/27841101/can-not-log-in-with-unit-test-in-django-allauth \
 Name: micgeronomo\
