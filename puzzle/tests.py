@@ -100,7 +100,7 @@ class SessionModelTest(TestCase):
             total_score=0,
             finished_puzzle=False
         )
-
+        #hunt session
         self.assertEqual(session.player, self.user)
         self.assertEqual(session.hunt, self.test_hunt)
         self.assertFalse(session.completed)
@@ -130,7 +130,7 @@ class GuessModelTest(TestCase):
             radius=20,
             order=1
         )
-
+        #hunt session
         session = Session.objects.create(
             player=self.user,
             hunt=self.test_hunt,
@@ -161,11 +161,11 @@ class GuessModelTest(TestCase):
             long=1.000,
             lat=4.500
         )
-
+        #wrong guess
         self.assertEqual(guess.session, session)
-        self.assertFalse(guess.order, 1)
-        self.assertFalse(guess.long, 1.234)
-        self.assertFalse(guess.lat, 4.567)
+        self.assertNotEqual(guess.order, 1)
+        self.assertNotEqual(guess.long, 1.234)
+        self.assertNotEqual(guess.lat, 4.567)
 
     
 
